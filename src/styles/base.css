@@ -1,0 +1,18 @@
+:root {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --transition-speed: 0.3s;
+}
+
+* {
+  transition:
+  background-color var(--transition-speed) ease,
+  color var(--transition-speed) ease,
+  border-color var(--transition-speed) ease,
+  box-shadow var(--transition-speed) ease;
+}
+
+  .homeSection {
+    /* background: none; */
+    width: auto;
+    /* margin: 7em 0; */
+  }

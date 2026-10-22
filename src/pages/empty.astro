@@ -1,0 +1,27 @@
+---
+// <!-- Not imported by any file -->
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+
+const breadcrumbItems = [
+  { label: 'Empty Page', href: '/empty', current: true }
+];
+---
+
+<Layout title="Empty - BluePrintNZ">
+  <div class="container mx-auto px-4 pt-10 pb-25">
+    <Breadcrumbs items={breadcrumbItems} />
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold mb-6 text-secondary">🚧 This page is still under development</h1>
+    <p>We’re working on it—check back soon!</p>
+    <br><hr><br>
+     <p style="font-style: italic;">Redirecting you back home in a moment…</p>
+  </div>
+  </div>
+
+  <script>
+    setTimeout(() => {
+      window.location.replace('/');
+    }, 3000);
+  </script>
+</Layout>

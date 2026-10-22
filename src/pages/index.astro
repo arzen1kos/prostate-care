@@ -1,0 +1,75 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "BluePrintNZ | Prostate Cancer Foundation of New Zealand";
+
+import HeroSection from './_home/HeroSection.astro';
+import UsersSection from './_home/UsersSection.astro';
+import ResourceSection from './_home/ResourceSection.astro';
+import ContextSection from './_home/ContextSection.astro';
+// import GetStartedSection from './_home/GetStartedSection.astro';
+
+import { heroContent, userContent, resourceContent, overviewContent } from '../content/home.ts';
+import { componentConfiguration } from '../lib/themes-and-layout/section-config';
+
+---
+
+<Layout title={title}>
+    <HeroSection
+      content={heroContent}
+      reversed = {false}
+      config={componentConfiguration}
+    />
+    <UsersSection
+      content={userContent}
+      config={componentConfiguration}
+    />
+    <ResourceSection
+        content={resourceContent}
+        config={componentConfiguration}
+    />
+    <!-- <div class="page-background-wrapper">
+      <img
+        class="page-background-image"
+        src="/assets/banner/hero-generic-banner-light.jpg"
+        alt="Background"
+      />
+    </div> -->
+
+    <ContextSection
+      content={overviewContent}
+      config={componentConfiguration}
+    />
+  <!-- <section class="homeSection">
+    <GetStartedSection/>
+  </section> -->
+</Layout>
+
+
+<!-- <script>
+  let lastMouseY = 0;
+  let scrollTriggered = false;
+
+  window.addEventListener("mousemove", (e) => {
+    const currentY = e.clientY;
+    const deltaY = currentY - lastMouseY;
+
+    // Detect upward movement
+    if (deltaY < -10 && !scrollTriggered) {
+      scrollTriggered = true;
+
+      // Scroll to target section
+      const target = document.getElementById("user-section");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      // Prevent rapid re-triggers
+      setTimeout(() => {
+        scrollTriggered = false;
+      }, 2000); // adjust delay as needed
+    }
+
+    lastMouseY = currentY;
+  });
+</script> -->

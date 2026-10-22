@@ -1,0 +1,72 @@
+.user-btn[data-active="true"] {
+  transform: scale(1.25);
+  background-color: var(--color-palette-three) !important;
+  color: var(--color-palette-five) !important;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  z-index: 10;
+}
+
+.subheadings {
+  font-size: 1.5rem;
+}
+
+.page-background-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.page-background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.page-link-icon {
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+.page-link-icon:hover {
+  opacity: 1;
+  border-radius: 10em;
+  padding: 0.6em;
+}
+
+.node {
+  @apply cursor-pointer transition-all duration-300;
+}
+
+.node-line {
+  @apply transition-all duration-500 opacity-0;
+  stroke: var(--color-accent);
+  stroke-width: 2;
+}
+
+.node-line.active {
+  @apply opacity-100;
+}
+
+#blueNodeDiagram a[href*="gojs.net"] {
+  opacity: 0.1 !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+  #theme-toggle {
+    transition: all 0.3s ease;
+  }
+  
+  #theme-toggle svg {
+    transition: transform 0.3s ease;
+  }
+  
+  #theme-toggle:hover svg {
+    transform: rotate(12deg);
+  }

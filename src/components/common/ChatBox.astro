@@ -1,0 +1,235 @@
+---
+// <!-- Referenced by: layouts/BaseLayout.astro -->
+// Standalone ChatBox overlay button that's guaranteed to be visible on all pages
+import { chatboxContent } from '../../content/common/chatbox';
+
+const { title, initialMessage, placeholder, buttonText, responses } = chatboxContent;
+---
+
+<!-- Chat Overlay Button -->
+<div
+  id="button-overlay"
+  class=""
+  >
+  <button 
+    id="chat-overlay-button" 
+    class=`
+    bg-[var(--color-palette-accent)] rounded-sm p-4 shadow-xl flex items-center justify-center transform transition-all duration-300 hover:scale-110
+    `
+    aria-label="Chat Support"
+  >
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+    </svg> -->
+    <svg 
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="var(--color-palette-five)"
+      stroke="var(--color-palette-two)"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+    <rect x="3" y="11" width="18" height="10" rx="2" />
+    <circle cx="12" cy="5" r="2" />
+    <path d="M12 7v4" />
+    <line x1="8" y1="16" x2="8" y2="16" />
+    <line x1="16" y1="16" x2="16" y2="16" />
+  </svg>
+  </button>
+  
+</div>
+
+<!-- Chat Box -->
+<div id="chat-overlay" class="fixed bottom-6 right-6 z-50 group md:static md:inset-0">
+  <div
+    id="chat-box"
+     class="hidden fixed rounded-lg shadow-lg overflow-hidden theme-transition
+           w-[90%] h-[90%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+           md:w-95 md:h-120 md:translate-x-0 md:translate-y-0 md:left-auto md:top-auto md:right-6 md:bottom-6">
+    <iframe src="https://copilotstudio.microsoft.com/environments/Default-ef475ff3-7cd1-4fa3-ba77-f63824f7c37c/bots/cr4d1_prometheus/webchat?__version__=2" frameborder="0" style="width: 100%; height: 100%;"></iframe>
+  </div>
+</div>
+
+<script>
+  // Extend the Window interface to include chatboxContent
+  //  * @property {string} greeting
+  /**
+   * @typedef {Object} ChatboxResponses
+   * @property {string} help
+   * @property {string} services
+   * @property {string} contact
+   * @property {string} pricing
+   * @property {string} thanks
+   * @property {string} goodbye
+   * @property {string} default
+   */
+  /**
+   * @typedef {Object} ChatboxContent
+   * @property {ChatboxResponses} responses
+   */
+
+  // TypeScript: declare chatboxContent on Window
+  // This makes TypeScript aware of window.chatboxContent
+  // @ts-ignore
+  declare global {
+    interface Window {
+      chatboxContent?: {
+        responses: {
+          // greeting: string;
+          help: string;
+          services: string;
+          contact: string;
+          pricing: string;
+          thanks: string;
+          goodbye: string;
+          default: string;
+        };
+      };
+    }
+  }
+  window.chatboxContent = {
+    responses: {
+      // greeting: "Helloa! How can I help you today?",
+      help: "I'm here to help! You can ask me about our services, website features, or how to get started.",
+      services: "We offer web development, UI/UX design, and SEO optimization services. Would you like to know more about any of these?",
+      contact: "You can reach our team at contact@blueprintnz.com or call us at (555) 123-4567 during business hours.",
+      pricing: "Our pricing varies based on project requirements. Would you like to request a custom quote?",
+      thanks: "You're welcome! Is there anything else I can help you with?",
+      goodbye: "Thank you for chatting with us! Have a great day!",
+      default: "🚧 This feature is still under development. Please check back later! In the meantime, feel free to explore our website. Thank you!"
+    }
+  };
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    const chatBox = document.getElementById('chat-box');
+    const chatToggle = document.getElementById('chat-overlay-button');
+    const chatForm = document.getElementById('chat-form');
+    const chatInput = document.getElementById('chat-input');
+    const chatMessages = document.getElementById('chat-messages');
+    
+    // Get responses from the content
+    const responses = window.chatboxContent.responses 
+    // Toggle chat box visibility
+    chatToggle?.addEventListener('click', () => {
+      chatBox?.classList.toggle('hidden');
+      
+      if (!chatBox?.classList.contains('hidden')) {
+        chatInput?.focus();
+      }
+    });
+
+    chatToggle.addEventListener('click', () => {
+      chatBox.classList.remove('hidden');
+    });
+    // Close chat box
+    document.addEventListener('click', (event) => {
+      const target = event.target as Node
+      const isClickInside = chatBox.contains(target) || chatToggle.contains(target);
+      if (!isClickInside) {
+        chatBox?.classList.add('hidden');
+      }
+    });
+    
+    // Handle chat form submission
+    chatForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const message = (chatInput as HTMLInputElement)?.value.trim();
+      if (!message) return;
+      
+      // Add user message
+      addMessage(message, 'user');
+      (chatInput as HTMLInputElement).value = '';
+      
+      // Simulate response (replace with actual API call)
+      setTimeout(() => {
+        // Get a contextual response based on the message content
+        const response = getContextualResponse(message);
+        addMessage(response, 'bot');
+      }, 1000);
+    });
+    
+    // Function to add a message to the chat
+    function addMessage(text, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'mb-3';
+      
+      const bubble = document.createElement('div');
+      bubble.className = sender === 'user' 
+        ? 'bg-blue-100 dark:bg-blue-900 rounded-lg p-2 max-w-[80%] ml-auto theme-transition'
+        : 'bg-gray-100 dark:bg-gray-700 rounded-lg p-2 max-w-[80%] theme-transition';
+      
+      const paragraph = document.createElement('p');
+      paragraph.className = 'text-sm dark:text-gray-200';
+      paragraph.textContent = text;
+      
+      bubble.appendChild(paragraph);
+      messageDiv.appendChild(bubble);
+      chatMessages?.appendChild(messageDiv);
+      
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Store chat history
+      storeChatHistory();
+    }
+    
+    // Function to get contextual responses based on message content
+    function getContextualResponse(message) {
+      message = message.toLowerCase();
+      // const defaultMessage = 'xxx'; 
+      
+      // Check for common questions or keywords
+      if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
+        // return responses.greeting;
+      }
+      else if (message.includes('help')) {
+        return responses.help;
+      }
+      else if (message.includes('service')) {
+        return responses.services;
+      }
+      else if (message.includes('contact') || message.includes('email') || message.includes('phone')) {
+        return responses.contact;
+      }
+      else if (message.includes('price') || message.includes('cost') || message.includes('quote')) {
+        return responses.pricing;
+      }
+      else if (message.includes('thank')) {
+        return responses.thanks;
+      }
+      else if (message.includes('bye') || message.includes('goodbye')) {
+        return responses.goodbye;
+      }
+      else {
+        return responses.default;
+      }
+    }
+    
+    // Store chat history in localStorage
+    function storeChatHistory() {
+      const chatHistory = chatMessages?.innerHTML || '';
+      localStorage.setItem('chatHistory', chatHistory);
+    }
+    
+    // Load chat history from localStorage
+    function loadChatHistory() {
+      const chatHistory = localStorage.getItem('chatHistory');
+      if (chatHistory && chatMessages) {
+        chatMessages.innerHTML = chatHistory;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+    
+    // Load chat history on page load
+    loadChatHistory();
+    
+    // Add pulse animation to chat toggle button after a delay
+    setTimeout(() => {
+      chatToggle?.classList.add('animate-pulse');
+    }, 2000);
+  });
+</script>

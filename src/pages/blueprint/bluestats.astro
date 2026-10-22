@@ -1,0 +1,79 @@
+---
+// <!-- Not imported by any file -->
+import Layout from '../../layouts/Layout.astro';
+import MainPageHeading from '../../components/layout/MainPageHeading.astro';
+import Icon from '../../components/ui/Icon.astro'
+// import { blueCards } from '../../content/blueindex/blueindex.ts';
+
+const breadcrumbItems = [
+  { label: 'Blueprint', link: '/blueprint', current: false },
+  { label: 'TrueBlueStats', link: '/blueprint/bluestats', current: true }
+];
+
+const {
+  heading = "TrueBlueStats",
+  title = `TrueBlueStats | BluePrintNZ`,
+  description = ["- View key statistics and insights about prostate cancer."],
+  // main = content['stage-1'].heading2.main,
+  // breadcrumb = content['stage-1'].heading2.breadcrumbs
+} = Astro.props;
+
+---
+<Layout title={title}>
+  <div class="container mx-auto px-4 pt-10 pb-25">
+     <MainPageHeading heading={heading} description={description} breadcrumbItems={breadcrumbItems} />
+      <!-- Description Section -->
+    <div class="mb-8 text-[var(--color-palette-five)] leading-relaxed space-y-4">
+      <p>
+        This report presents a comprehensive overview of prostate cancer data across Australia and New Zealand, 
+        drawing from national registries and clinical sources.
+      </p>
+      <p>
+        Compiled by <strong>Monash University</strong> and regional collaborators, the 2023 summary explores 
+        detection trends, treatment access, and outcomes over time — helping shape evidence-based care across our communities.
+      </p>
+      <a 
+        href="/assets/pdf/MOV0009-PCOR ANZ-Annual Report - Summary Version_DIGI (Singles)_FA.pdf"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-2 text-[var(--color-palette-five)] hover:text-[var(--color-palette-four)] underline underline-offset-4"
+      >
+      View full report
+      <Icon name="external-link" size={16} />
+      </a>
+    </div>
+
+    <!-- PDF Embed -->
+    <div style="height: 100vh; width: 100%; overflow: hidden;" class="rounded-lg shadow border border-neutral-200">
+      <iframe
+        src="/assets/pdf/MOV0009-PCOR ANZ-Annual Report - Summary Version_DIGI (Singles)_FA.pdf#toolbar=0"
+        style="border: none; width: 100%; height: 100%;"
+        title="Prostate Cancer Annual Report PDF"
+      ></iframe>
+    </div>
+
+    <section class="m zax-w-4xl mx-auto my-10 p-6 rounded-lg bg-[var(--color-palette-four)] shadow-md">
+      <h3 class="text-[var(--color-palette-two)] text-xl font-semibold mb-3">About Monash University &amp; the Data Coordination Centre</h3>
+      <p class="mb-4 leading-relaxed text-[var(--color-palette-two)]">
+        Monash University leads critical research and data coordination efforts in prostate cancer 
+        across Australia and New Zealand. Their Data Coordination Centre manages comprehensive clinical 
+        registries that inform policy, improve patient outcomes, and support best practice guidelines.
+      </p>
+      <p class="mb-6 leading-relaxed text-[var(--color-palette-two)]">
+        By collaborating with regional health bodies, clinicians, and communities, Monash drives innovation 
+        and equity in prostate cancer care. Their annual reports and data insights are vital tools for healthcare 
+        professionals and researchers alike.
+      </p>
+      <a
+        href="https://prostatecancerregistry.org/governance/data-coordination-centre/"
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center gap-2 text-[var(--color-palette-two)] hover:text-[var(--color-palette-one)] underline underline-offset-4 font-semibold"
+      >
+      View more from Monash University
+      <Icon name="external-link" size={16} />
+      </a>
+    </section>
+
+  </div>
+</Layout>

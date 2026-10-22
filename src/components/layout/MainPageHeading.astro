@@ -1,0 +1,30 @@
+---
+// src/components/CaregiverHeader.astro
+
+import Breadcrumbs from '../ui/Breadcrumbs.astro';
+// import type { BreadcrumbItem } from '../types'; // Optional if using types
+
+const {
+  heading,
+  description,
+  breadcrumbItems
+} = Astro.props;
+
+
+---
+
+<div>
+  <Breadcrumbs items={breadcrumbItems} />
+  <!-- <div class="max-w-4xl mx-auto"> -->
+    <h1 class="text-3xl md:text-4xl font-bold mb-6 text-secondary">{heading}</h1>
+    <details class="group">
+      <summary class="cursor-pointer font-semibold">Summary</summary>
+      <ul style="padding-left:2rem" class="ml-4 mt-2 group-open:animate-fade-in">
+        {Array.isArray(description) && description.map((p, i) => (
+          <li class="mb-4 text-[var(--color-palette-four)]">{p}</li>
+        ))}
+      </ul>
+    </details>
+    <hr class="my-4 border-t border-[var(--color-palette-gray)]" />
+  </div>
+<!-- </div> -->

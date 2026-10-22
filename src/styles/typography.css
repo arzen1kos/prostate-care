@@ -1,0 +1,37 @@
+@layer base {
+  html, body, header {
+    color: var(--color-palette-five);
+    background-color: var(--color-palette-one);
+  }
+
+  html.text-sm { font-size: 0.8rem; }
+  html.text-base { font-size: 1rem; }
+  html.text-xl { font-size: 1.4rem; }
+
+  h1 {
+    @apply text-4xl font-bold tracking-tight sm:text-5xl;
+    color: var(--color-palette-five);
+  }
+
+  h2 {
+    @apply text-2xl font-bold sm:text-3xl;
+    color: var(--color-palette-five);
+  }
+
+  h3 {
+    @apply text-xl font-semibold sm:text-2xl;
+    color: var(--color-palette-five);
+  }
+
+  a:not(.btn) {
+    @apply underline transition hover:opacity-80;
+    color: var(--color-palette-five);
+  }
+
+  p, span, div, li {
+    color: var(--color-palette-five);
+  }
+  li {
+    color: var(--color-palette-one);
+  }
+}

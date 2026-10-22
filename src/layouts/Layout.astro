@@ -1,0 +1,88 @@
+---
+// <!-- Referenced by: pages/about.astro, pages/blobs/index.astro, pages/bluenode/d3-version.astro, pages/bluenode/index.astro, pages/design-system.astro, pages/features.astro, pages/get-involved/index.astro, pages/help/index.astro, pages/index.astro, pages/information-and-support/index.astro, pages/news/index.astro, pages/newsletter.astro, pages/research/index.astro, pages/services.astro, pages/shop/index.astro -->
+// This is a compatibility layout that redirects to BaseLayout
+// It's kept for backward compatibility with existing pages
+import Footer from '../components/layout/footer/Footer.astro';
+import Header from '../components/layout/header/Header.astro';
+// import ChatBox from '../components/common/ChatBox.astro';
+import BackToTop from '../components/common/BackToTop.astro';
+import Button from '../components/ui/Button.astro';
+// import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
+import '../styles/globals.css';
+
+// const breadcrumbItems = [
+//   { label: '', href: '/', current: true }
+// ];
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'BlueprintNZ - Modern web solutions' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    
+    <!-- Theme script to prevent flash of wrong theme -->
+    <script is:inline>
+      // Check for saved theme preference or use system preference
+      const getThemePreference = () => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'dark' : 'light';
+      };
+      
+      // Apply theme immediately to prevent flash
+      const theme = getThemePreference();
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header label="Home" href="/" icon="home" />
+    <!-- <Breadcrumbs items={breadcrumbItems} /> -->
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+    <Footer />
+    <!-- <BackToTop /> -->
+    <button
+      id="scrollToTop"
+      class="fixed bottom-6 right-6 z-50 bg-[var(--color-palette-four)] text-[var(--color-palette-one)] px-4 py-3 rounded-sm shadow-lg hover:bg-[var(--color-palette-four)] transition-opacity duration-300 opacity-0 pointer-events-none"
+      aria-label="Scroll to top"
+    >
+      ↑
+    </button>
+    <!-- <ChatBox /> -->
+
+  </body>
+</html>
+<script>
+  const scrollBtn = document.getElementById("scrollToTop");
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 300) {
+      scrollBtn.classList.remove("opacity-0", "pointer-events-none");
+    } else {
+      scrollBtn.classList.add("opacity-0", "pointer-events-none");
+    }
+  });
+
+  scrollBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+</script>

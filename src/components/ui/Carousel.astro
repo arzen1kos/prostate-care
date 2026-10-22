@@ -1,0 +1,215 @@
+---
+// <!-- Imported by: pages/index.astro -->
+import Icon from './Icon.astro';
+interface CarouselImage {
+  src: string;
+  alt: string;
+  text: string;
+  link: string;
+}
+
+interface Props {
+  images: CarouselImage[];
+  autoplay?: boolean;
+  interval?: number;
+}
+const { images, autoplay = true, interval = 5000 } = Astro.props;
+const carouselId = `carousel-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div id={carouselId} class="relative w-full overflow-hidden rounded-lg">
+  <div id="hero-carousel" class="carousel-container flex my-5 transition-transform duration-500 ease-in-out h-[400px] md:h-[450px]">
+    {images.map((image, index) => (
+      <div class="thumbnail  carousel-slide min-w-full h-auto relative group" data-index={index}>
+      <a 
+        href={image.link} 
+      >
+      <img 
+        src={image.src} 
+        alt={image.alt} 
+        class="w-full h-full object-cover rounded-2xl"
+      />
+        <span class="overlay-text absolute no-underline text-lg font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {image.text}
+        </span>
+      </a>
+      </div>
+    ))}
+  </div>
+  
+  <!-- Navigation Arrows - Hidden on mobile -->
+  <button 
+    class="carousel-prev absolute top-1/2 left-4 transform -translate-y-1/2 p-2 rounded-full hidden md:block"
+    aria-label="Previous slide"
+  ><Icon name="chevron-left" /></button>
+  <button 
+  class="carousel-next absolute top-1/2 right-4 transform -translate-y-1/2 p-2 rounded-full hidden md:block"
+  aria-label="Next slide"
+  ><Icon name="chevron-right" /></button>
+</div>
+
+<!-- Indicators - Moved below the carousel -->
+<div class="flex justify-center space-x-3">
+  {images.map((_, index) => (
+    <button 
+      class="carousel-indicator w-3 h-3 rounded-full bg-gray-300 dark:bg-gray-600 hover:bg-blue-500"
+      data-index={index}
+      aria-label={`Go to slide ${index + 1}`}
+    ></button>
+  ))}
+</div>
+
+<script define:vars={{ carouselId, autoplay, interval, imageCount: images.length }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.getElementById(carouselId);
+    if (!carousel) return;
+    
+    const container = carousel.querySelector('.carousel-container');
+    const slides = carousel.querySelectorAll('.carousel-slide');
+    const prevBtn = carousel.querySelector('.carousel-prev');
+    const nextBtn = carousel.querySelector('.carousel-next');
+    const indicators = document.querySelectorAll(`#${carouselId} + div .carousel-indicator`);
+    
+    let currentIndex = 0;
+    let autoplayInterval;
+    
+    // Set initial active indicator
+    updateIndicators();
+    
+    // Set up autoplay if enabled
+    if (autoplay) {
+      startAutoplay();
+    }
+    
+    // Event listeners
+    prevBtn?.addEventListener('click', () => {
+      goToSlide(currentIndex - 1);
+      if (autoplay) resetAutoplay();
+    });
+    
+    nextBtn?.addEventListener('click', () => {
+      goToSlide(currentIndex + 1);
+      if (autoplay) resetAutoplay();
+    });
+    
+    indicators.forEach(indicator => {
+      indicator.addEventListener('click', () => {
+        const index = parseInt(indicator.dataset.index);
+        goToSlide(index);
+        if (autoplay) resetAutoplay();
+      });
+    });
+    
+    // Touch support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    carousel.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+    
+    carousel.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, {passive: true});
+    
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      if (touchEndX < touchStartX - swipeThreshold) {
+        // Swipe left - go to next slide
+        goToSlide(currentIndex + 1);
+        if (autoplay) resetAutoplay();
+      } else if (touchEndX > touchStartX + swipeThreshold) {
+        // Swipe right - go to previous slide
+        goToSlide(currentIndex - 1);
+        if (autoplay) resetAutoplay();
+      }
+    }
+    
+    // Pause autoplay on hover
+    carousel.addEventListener('mouseenter', () => {
+      if (autoplay) clearInterval(autoplayInterval);
+    });
+    
+    carousel.addEventListener('mouseleave', () => {
+      if (autoplay) startAutoplay();
+    });
+    
+    // Functions
+    function goToSlide(index) {
+      // Handle wrapping
+      if (index < 0) {
+        index = slides.length - 1;
+      } else if (index >= slides.length) {
+        index = 0;
+      }
+      
+      currentIndex = index;
+      container.style.transform = `translateX(-${currentIndex * 100}%)`;
+      updateIndicators();
+    }
+    
+    function updateIndicators() {
+      indicators.forEach((indicator, index) => {
+        if (index === currentIndex) {
+          indicator.classList.add('bg-blue-500');
+          indicator.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+        } else {
+          indicator.classList.add('bg-gray-300', 'dark:bg-gray-600');
+          indicator.classList.remove('bg-blue-500');
+        }
+      });
+    }
+    
+    function startAutoplay() {
+      autoplayInterval = setInterval(() => {
+        goToSlide(currentIndex + 1);
+      }, interval);
+    }
+    
+    function resetAutoplay() {
+      clearInterval(autoplayInterval);
+      startAutoplay();
+    }
+  });
+</script>
+<style>
+.thumbnail {
+  overflow: hidden;
+}
+
+.thumbnail img {
+  transition: transform 0.5s ease;
+}
+
+.thumbnail:hover img {
+  transform: scale(1.05);
+}
+
+.overlay-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 80%;
+  padding: 1rem 2rem;
+  border-radius: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.5); /* optional for readability */
+  color: white;
+  text-align: center;
+  white-space: normal; /* allows wrapping */
+  line-height: 1.4;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.thumbnail:hover .overlay-text {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.carousel-indicator {
+  transition: background-color 0.3s ease;
+}
+</style>

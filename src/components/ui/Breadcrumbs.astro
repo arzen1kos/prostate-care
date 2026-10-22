@@ -1,0 +1,36 @@
+---
+interface BreadcrumbItem {
+  label: string;
+  link: string;
+  current?: boolean;
+}
+
+const { items } = Astro.props;
+---
+<nav aria-label="Breadcrumb" class="pt-5 pb-15">
+  <ol class="flex flex-wrap items-center space-x-1 md:space-x-2 text-sm">
+    <li>
+      <a href="/" class="text-secondary hover:text-primary transition-colors">
+        <span class="sr-only">Home</span>
+        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        </svg>
+      </a>
+    </li>
+    
+    {items.map((item, index) => (
+      <li class="flex items-center">
+        <svg class="w-3 h-3 text-neutral-600 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+        <a 
+          href={item.link}
+          class={`${item.current ? 'text-primary font-medium' : 'text-secondary hover:text-primary'} transition-colors`}
+          aria-current={item.current ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ol>
+</nav>

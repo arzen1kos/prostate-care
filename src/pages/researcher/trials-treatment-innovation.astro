@@ -1,0 +1,116 @@
+---
+// <!-- Not imported by any file -->
+import Layout from '../../layouts/Layout.astro';
+import MainPageHeading from '../../components/layout/MainPageHeading.astro';
+import { content, researchCategories } from '../../content/users/c-researcher-content.ts';
+import Icon from '../../components/ui/Icon.astro';
+
+const {
+    heading = content['researcher'].heading2.title,
+    title = `Stage ${content['researcher'].heading2.stageNum} - ${heading} | BluePrintNZ`,
+    description = content['researcher'].heading2.description,
+    main = content['researcher'].heading2.main,
+    breadcrumb = content['researcher'].heading2.breadcrumbs
+} = Astro.props;
+
+const breadcrumbItems = [{ label: heading, link: breadcrumb.link, current: breadcrumb.current }];
+---
+
+<Layout title=`${title}`>
+    <div class="container mx-auto px-4 pt-10 pb-25">
+        <!-- 🧩 Header Component -->
+        <MainPageHeading heading={heading} description={description} breadcrumbItems={breadcrumbItems} />
+
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-6 text-secondary">Research Areas</h2>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-10">
+                    {
+                        researchCategories.map((category) => (
+                            <div class="border border-[var(--color-palette-border)] rounded-lg p-6 hover:border-primary transition-colors">
+                                <h3 class="text-lg font-semibold mb-3 text-secondary">{category.title}</h3>
+                                <p class="text-sm mb-4">{category.description}</p>
+                                <a href="#" class="text-accent hover:underline font-medium">
+                                    Learn more →
+                                </a>
+                            </div>
+                        ))
+                    }
+                </div>
+
+                <h2 class="text-2xl font-bold mb-4 text-secondary">Latest Research Highlights</h2>
+                <p class="mb-6">Stay up to date with the latest findings and breakthroughs from our research programs.</p>
+
+                <div class="space-y-6 mb-10">
+                    <div class="border border-[var(--color-palette-border)] rounded-lg p-6">
+                        <h3 class="font-semibold text-lg text-secondary mb-2">New Study Reveals Promising Treatment Approach</h3>
+                        <p class="text-sm mb-3">
+                            A recent study conducted by our research team has identified a promising new approach to treatment that shows significant
+                            improvements in patient outcomes.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-[var(--color-palette-light-gray)]">Published: June 15, 2025</span>
+                            <a href="#" class="text-accent hover:underline text-sm font-medium">Read the full study →</a>
+                        </div>
+                    </div>
+
+                    <div class="border border-[var(--color-palette-border)] rounded-lg p-6">
+                        <h3 class="font-semibold text-lg text-secondary mb-2">Risk Factor Analysis: New Insights</h3>
+                        <p class="text-sm mb-3">
+                            Our comprehensive analysis of risk factors has revealed new insights into prevention strategies and early intervention
+                            opportunities.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-[var(--color-palette-light-gray)]">Published: May 3, 2025</span>
+                            <a href="#" class="text-accent hover:underline text-sm font-medium">Read the full study →</a>
+                        </div>
+                    </div>
+
+                    <div class="border border-[var(--color-palette-border)] rounded-lg p-6">
+                        <h3 class="font-semibold text-lg text-secondary mb-2">Quality of Life Improvements Through Support Services</h3>
+                        <p class="text-sm mb-3">
+                            This study examines the impact of comprehensive support services on quality of life metrics, showing significant improvements across
+                            multiple domains.
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-[var(--color-palette-light-gray)]">Published: April 22, 2025</span>
+                            <a href="#" class="text-accent hover:underline text-sm font-medium">Read the full study →</a>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4 border-t border-[var(--color-palette-gray)]" />
+
+                <div class="bg-accent/10 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-3 text-secondary">Participate in Research</h3>
+                    <p class="mb-4">
+                        We're always looking for participants for our research studies. Your participation helps advance scientific understanding and improve
+                        outcomes for everyone.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#" class="bg-accent text-neutral py-2 px-4 rounded-lg text-center hover:bg-accent/80 transition-colors">
+                            View Current Studies
+                        </a>
+                        <a href="#" class="bg-accent text-neutral py-2 px-4 rounded-lg text-center hover:bg-accent/80 transition-colors">
+                            Register as a Participant
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <span class="subheadings flex gap-3"> -->
+        {main.x.subheading}
+        <a href=`${main.x.link}`>
+            <Icon class="card-icon" name="external-link" color="var(--color-palette-five)" />
+        </a>
+    </div>
+    <!-- <p class="pt-2">{main.x.body[0]}</p> -->
+    <!-- <p class="pt-2">{main.x.body[1]}</p> -->
+    <!-- <ul>
+      {main.x.body[2].items.map((item, i) => (
+        <li class="pt-2 pl-4">{`- ${item}`}</li>
+      ))}  
+    </ul>  -->
+</Layout>

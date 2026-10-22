@@ -1,0 +1,62 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+import Card from '../../components/ui/Card.astro';
+import { blueCardConfig } from '../../lib/types/CardLibrary'
+import { blueCards } from '../../content/blueindex/blueindex';
+import MainPageHeading from '../../components/layout/MainPageHeading.astro';
+const breadcrumbItems = [
+  { label: 'Blueprint', href: '/blueprint', current: true }
+];
+
+const {
+  icon = blueCardConfig.icon,
+  textClass = blueCardConfig.textClass,
+  color = blueCardConfig.color,
+  extraConfig = blueCardConfig.extraConfig,
+  // cardLink='',//`blueindex/${extraConfig.link}`
+} = blueCardConfig;
+
+const blueCardsContent = [
+  "BlueBeacon",
+  "BlueNode",
+  "TrueBlueStats",
+];
+
+const {
+    heading = "Your First Step Forward",
+    title = `Getting Started | BluePrintNZ`,
+    description = 'Choose a card to start learning about Prostate Cancer',
+    // main = 'content['stage-0'].heading2.main',
+    // link = content["stage-0"].heading2.description,
+    // breadcrumb = content['stage-0'].heading2.breadcrumbs
+} = Astro.props;
+
+---
+<Layout title={title}>
+  <div class="container mx-auto px-4 pt-10 pb-25">
+    <!-- <Breadcrumbs items={breadcrumbItems} /> -->
+    <MainPageHeading heading={heading} description={description} breadcrumbItems={breadcrumbItems} />
+    <!-- <div class="flex justify-center align-center">
+      <h2>Choose a card to start learning about Prostate Cancer</h2>
+    </div> -->
+  
+  
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full md:px-20 py-10 place-items-center">
+     {blueCards.map(({heading, content, image },index) => (
+      <Card
+        id={`bluecard-${icon.name[index]}`}
+        heading={heading}
+        content={content}
+        icon={icon}
+        textClass={textClass}
+        color={color}
+        config={extraConfig}
+        index={index}
+        link={`${icon.name[index]}`}
+        image={image}
+        />
+      ))}
+    </div>
+  </div>
+</Layout>

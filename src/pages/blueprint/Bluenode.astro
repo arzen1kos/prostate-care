@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+
+// BlueNode components
+import BlueNodeDetails from '../../components/NodeGraph/BlueNodeDetails.astro';
+import GraphCanvas from '../../components/NodeGraph/GraphCanvas.astro';
+import Callout from '../../components/ui/Callout.astro';
+
+import { bluenodeData } from '../../content/blueindex/bluenode.ts';
+
+const breadcrumbItems = [
+  { label: 'Blueprint', link: '/blueprint', current: false },
+  { label: 'BlueNode', link: '/blueprint/bluenode', current: true }
+];
+
+---
+<Layout title="BlueNode - BluePrintNZ">
+  <div class="container mx-auto px-4 pt-10 pb-10 mb-70">
+    <Breadcrumbs items={breadcrumbItems} />
+  
+    <!-- Full-page Interactive Node Graph -->
+    <div class="mb-5 w-full " id="node-container">
+      <!-- <div class="w-auto mx-10 md:mx-40">
+         <Callout
+           head="Take the First Step."
+           content="Welcome to Blue Journey — your personalized walkthrough to understanding prostate health. From early screening to treatment options, we’ll guide you step-by-step through the essentials. Empower yourself with knowledge, ask the right questions, and discover supportive resources — all in one clear, accessible path."
+         />
+       </div> -->
+        <div class="w-auto mx-3 py-2">
+          <Callout
+            head={"Control Tip!"}
+            content={`
+            You can <strong>drag the background</strong> to pan,<br>
+            use <strong>CTRL + arrow up/down</strong> keys to zoom in/out,<br>
+            and <strong>drag nodes</strong> to reposition them.
+          `}
+          />
+        </div>
+      <!-- Main Graph Area (2/3 width) -->
+      <div class="flex flex-col md:flex-row mb-5 px-10 h-[calc(100vh-var(--header-height)-var(--footer-height))]">
+      <!-- <div class="flex flex-col md:flex-row mb-5 px-10 h-[calc(100vh-var(--header-height)-var(--footer-height))]"> -->
+        <div class="w-full md:w-3/5 relative">
+          <!-- Dynamic Nodes Container with Pan and Zoom -->
+          <GraphCanvas data={bluenodeData} />
+        </div>
+        <div class="flex flex-col w-full md:w-2/5 relative justify-center">
+        <!-- BlueNodeDetails (1/3 width) -->
+          <BlueNodeDetails />
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+

@@ -1,0 +1,71 @@
+---
+import Button from '../../components/ui/Button.astro';
+import Carousel from '../../components/ui/Carousel.astro';
+import Icon from '../../components/ui/Icon.astro';
+
+const { 
+  content,
+  config,
+  reversed,
+} = Astro.props;
+
+const {
+  carouselImages,
+  title,
+  description,
+} = content
+
+const {
+  margin=config.hero.margin,
+  padding=config.hero.padding,
+  scale=config.hero.scale,
+  other=config.hero.other
+} = config
+---
+
+<!-- <section class=`${margin} ${padding} ${other} ${scale}` style="background: none"> -->
+<section class="mb-7 md:my-0 w-full bg-transparent px-4 sm:px-6 lg:px-18"></section>
+ <div class="container mx-auto">
+  <div class={`flex flex-col ${reversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center justify-between gap-4 h-1/5`}>
+    <!-- LEFT CAROUSEL -->
+    <div class="flex flex-col w-full md:w-4/9 px-3 lg:px-7">
+      <Carousel images={carouselImages} />
+    </div>
+
+    <!-- RIGHT: HERO TITLE -->
+    <div class="w-full md:w-5/9 text-center px-5 md:px-0 md:text-start scale-80 md:scale-75 lg:scale-75">
+      <h1 class="text-3xl md:text-6xl lg:text-6xl font-bold mb-6 text-[var(--color-palette-accent)]">
+        {title}
+      </h1>
+      <p class="text-lg md:text-xl mb-8 text-[var(--color-palette-five)]">
+        {description}
+      </p>
+      <div class="flex gap-5 justify-center">
+      <Button variant="hero" size="lg" href={content.exploreLink} fullWidth={true}>
+        <span class="group flex items-center gap-2 justify-center">
+          <p class="text-[var(--color-palette-one)] group-hover:text-[var(--color-palette-five)] transition-colors duration-200">
+            {content.exploreButton}
+          </p>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 48 48"
+            class="w-10 h-10 transition-colors duration-200"
+            fill="currentColor"
+            stroke="currentColor"
+          >
+            <g
+              class="text-[var(--color-palette-one)] group-hover:text-[var(--color-palette-five)]"
+              fill="currentColor"
+              stroke="currentColor"
+            >
+              <path d="M10.064 24.059c3.287-1.074 3.465-5.093 7.797-5.942c3.465-.679 5.547 1.709 6.064 4.244c.433 2.122-.866 7.639-7.797 7.639C7.465 30 4.578 24.483 4 22.361c.866.849 3.465 2.546 6.064 1.697Z" />
+              <path d="M37.936 24.059c-3.288-1.074-3.465-5.093-7.797-5.942c-3.465-.679-5.547 1.709-6.064 4.244c-.433 2.122.866 7.639 7.797 7.639c8.663 0 11.55-5.517 12.128-7.639c-.866.849-3.465 2.546-6.064 1.697Z" />
+            </g>
+          </svg>
+        </span>
+      </Button>
+
+      </div>
+    </div>
+  </div>
+</section>

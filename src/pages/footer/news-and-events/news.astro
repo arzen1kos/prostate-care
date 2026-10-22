@@ -1,0 +1,125 @@
+---
+// <!-- Not referenced by any file -->
+// import BaseLayout from '../../layouts/BaseLayout.astro';
+// import Breadcrumbs from '../../components/ui/Breadcrumbs.astro';
+
+const breadcrumbItems = [
+  { label: 'News', href: '/news', current: true }
+];
+
+const newsArticles = [
+  {
+    title: "New Research Findings",
+    date: "June 15, 2025",
+    summary: "Our latest research reveals promising new approaches to treatment and prevention.",
+    image: "/image-placeholder.jpg",
+    category: "Research"
+  },
+  {
+    title: "Community Event Success",
+    date: "May 28, 2025",
+    summary: "Our recent community event brought together over 500 participants for awareness and support.",
+    image: "/image-placeholder.jpg",
+    category: "Events"
+  },
+  {
+    title: "New Support Resources",
+    date: "May 10, 2025",
+    summary: "We've launched new support resources designed to help individuals and families navigate their journey.",
+    image: "/image-placeholder.jpg",
+    category: "Resources"
+  },
+  {
+    title: "Partnership Announcement",
+    date: "April 22, 2025",
+    summary: "We're excited to announce our new partnership with a leading research institution to advance our mission.",
+    image: "/image-placeholder.jpg",
+    category: "Partnerships"
+  },
+  {
+    title: "Volunteer Recognition",
+    date: "April 5, 2025",
+    summary: "We're proud to recognize our dedicated volunteers who make our work possible.",
+    image: "/image-placeholder.jpg",
+    category: "Community"
+  },
+  {
+    title: "Annual Report Released",
+    date: "March 15, 2025",
+    summary: "Our annual report highlights our achievements, challenges, and plans for the future.",
+    image: "/image-placeholder.jpg",
+    category: "Organization"
+  }
+];
+
+const categories = [...new Set(newsArticles.map(article => article.category))];
+---
+
+<!-- <BaseLayout title="News - BluePrintNZ"> -->
+  <div class="container mx-auto px-4 py-8">
+    <!-- <Breadcrumbs items={breadcrumbItems} /> -->
+    
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl md:text-4xl font-bold mb-6 text-secondary">Latest News</h1>
+      
+      <div class="flex flex-wrap gap-3 mb-8">
+        <button class="bg-primary text-secondary px-4 py-2 rounded-lg">All Categories</button>
+        {categories.map(category => (
+          <button class="bg-neutral-300 text-secondary px-4 py-2 rounded-lg hover:bg-neutral-400 transition-colors">
+            {category}
+          </button>
+        ))}
+      </div>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        {newsArticles.map(article => (
+          <div class="border border-neutral-300 rounded-lg overflow-hidden hover:border-primary transition-colors">
+            <div class="h-48 bg-neutral-200 relative">
+              <img src={article.image} alt={article.title} class="w-full h-full object-cover" />
+              <span class="absolute top-2 right-2 bg-accent text-neutral text-xs py-1 px-2 rounded">
+                {article.category}
+              </span>
+            </div>
+            <div class="p-5">
+              <span class="text-xs text-neutral-600">{article.date}</span>
+              <h3 class="font-semibold text-lg text-secondary mt-1">{article.title}</h3>
+              <p class="text-sm mt-2 mb-4">{article.summary}</p>
+              <a href="#" class="text-accent hover:underline font-medium">Read more →</a>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      <div class="flex justify-center">
+        <nav aria-label="Pagination" class="inline-flex">
+          <a href="#" class="px-3 py-2 border border-neutral-300 rounded-l-lg hover:bg-neutral-100">Previous</a>
+          <a href="#" class="px-3 py-2 border-t border-b border-neutral-300 bg-primary text-secondary">1</a>
+          <a href="#" class="px-3 py-2 border-t border-b border-neutral-300 hover:bg-neutral-100">2</a>
+          <a href="#" class="px-3 py-2 border-t border-b border-neutral-300 hover:bg-neutral-100">3</a>
+          <a href="#" class="px-3 py-2 border border-neutral-300 rounded-r-lg hover:bg-neutral-100">Next</a>
+        </nav>
+      </div>
+      
+      <div class="mt-12 bg-primary/10 p-6 rounded-lg">
+        <h2 class="text-xl font-semibold mb-3 text-secondary">Subscribe to Our Newsletter</h2>
+        <p class="mb-4">
+          Stay up to date with the latest news, events, and resources from BluePrintNZ.
+        </p>
+        <form class="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="email" 
+            placeholder="Your email address" 
+            class="flex-grow px-4 py-2 border border-neutral-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            required
+          />
+          <button 
+            type="submit" 
+            class="bg-accent text-neutral px-6 py-2 rounded-lg hover:bg-accent/80 transition-colors"
+          >
+            Subscribe
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+<!-- </BaseLayout> -->

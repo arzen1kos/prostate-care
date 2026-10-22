@@ -1,0 +1,9 @@
+@import 'tailwindcss';
+/* @import './chat-box.css'; */
+/* CSS variables are injected from colors.ts */
+@import './base.css';
+@import './themes.css';
+@import './typography.css';
+@import './components.css';
+@import './markdown.css';
+@import './utilities.css';

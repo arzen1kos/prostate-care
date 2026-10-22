@@ -1,0 +1,28 @@
+---
+// <!-- Referenced by: components/layout/footer/Footer.astro -->
+import Icon from '../../ui/Icon.astro';
+
+interface Props {
+  links: {
+    label: string;
+    href: string;
+    icon: string;
+  }[];
+}
+
+const { links } = Astro.props;
+---
+
+<div class="flex space-x-4">
+  {links.map(link => (
+    <a 
+      href={link.href} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      class="text-neutral/80 hover:text-white transition-colors"
+      aria-label={link.label}
+    >
+      <Icon name={link.icon} size={20} color="var(--color-palette-gray)"/>
+    </a>
+  ))}
+</div>
