@@ -19,11 +19,24 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
 [![Website](https://img.shields.io/badge/Live_Demo-View%20on%20Netlify-00007e?style=for-the-badge&logo=netlify)](prostatecarenz.netlify.app/)
 </div>
 
+## Branch Notes
+>
+> **Name:** `dev`
+> 
+> **Purpose:** Primary integration branch for active development. Features, fixes, and refactors are merged here before being promoted to production.
+> 
+> **Workflow**: `feature/* → dev → main`
+> - Keep builds passing.
+> - Merge tested work only.
+> - Sync regularly with `main`.
+>
+> **Status:** Integrating RAG chatbot (In Progress)
+
 ## Launching the app locally
 ### Requirements:
 - **Operating System:**
   - (a) Windows 10 or Windows 11 environment  
-    &nbsp;&nbsp;&nbsp;&nbsp;- WSL1 installed to launch Linux Ubuntu environment  
+    &nbsp;&nbsp;&nbsp;&nbsp;- WSL2 installed to launch Linux Ubuntu environment  
     &nbsp;&nbsp;&nbsp;&nbsp;- Ubuntu LTS 22.04 distro installed
   - (b) Linux Ubuntu (**preferred**)
 
