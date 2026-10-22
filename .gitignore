@@ -39,12 +39,6 @@ lerna-debug.log*
 !.vscode/extensions.json
 !.vscode/settings.json
 !.vscode/launch.json
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
 .DS_Store
 *.sublime-workspace
 
@@ -75,3 +69,9 @@ Thumbs.db
 .netlify/
 functions/*.js
 functions/*.map
+
+# Specific to Prettier
+.prettierrc
+
+# Assets
+public/assets/
