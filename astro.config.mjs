@@ -27,7 +27,7 @@ export default defineConfig({
     redirects: {
         // '/[...slug]': {
             // status: 302,
-            // destination: '/page-under-development'
+            // destination: '/404'
         // }
     }
 });
