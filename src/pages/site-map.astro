@@ -1,0 +1,28 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Canvas from '@components/Canvas.tsx'
+
+// Optional: give real titles/urls for article codes instead of the
+// auto-humanized fallback (code -> "Patient Stage0" / "What It Means").
+// Anything not listed here still works — it just falls back to
+// `articleBaseUrl + code` as the link and a humanized title.
+//
+// const articleIndex = {
+//   patient_stage0_what_it_means: {
+//     title: 'What does Stage 0 mean?',
+//     url: '/articles/patient/stage-0/what-it-means',
+//   },
+// };
+
+const title: string = "Site Map"
+
+---
+
+<Layout
+  title=`${title}| Prostate Cancer Foundation NZ`
+  description=`X`
+>
+    <div class="pt-2 md:px-6">
+    <Canvas client:only="react"/>
+    </div>
+</Layout>
