@@ -50,12 +50,8 @@ const title: string = "Site Map"
   title=`${title}| Prostate Cancer Foundation NZ`
   description=`X`
 >
-    <div class="md:px-3">
-        <div class="hint">drag background to pan · scroll to zoom · click a node to open its branch · drag nodes to rearrange</div>
-        <!-- Astro -->
-        <CanvasNav nodes={nodes} edges={edges} currentPath={Astro.url.pathname} height="100vh" />
-
-        <!-- React -->
-        <!-- <Canvas client:only="react" basePath="/articles" height="100vh" edgeWidth={2} /> -->
+    <div class="pt-2 md:px-6">
+    <!-- <Canvas client:only="react"/> -->
+     <CanvasNav nodes={nodes} edges={edges} currentPath={Astro.url.pathname} height="100vh" />
     </div>
 </Layout>

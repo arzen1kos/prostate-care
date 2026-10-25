@@ -2,6 +2,10 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import data from "@contents/pages/decision_tree.json";
 import "@styles/canvas.module.css";
 
+// import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+// import data from "../../data/journey.json";
+// import "./journey.css";
+
 /* ───────── Types ───────── */
 type Option = { value: string; label: string; next: string | null; articles: string[] };
 type QNode = {
@@ -27,19 +31,22 @@ type Cam = { x: number; y: number; s: number };
 
 /* ───────── Tunables ───────── */
 const W = 240; // node width
-const H = { root: 108, opt: 128, art: 68 }; // node heights (match canvas.css)
-const GAP_X = 28, GAP_Y = 84;
+const H = { root: 100, opt: 92, art: 52 }; // node heights
+const GAP_X = 28, GAP_Y = 84; // spacing between siblings / levels
 const MIN_S = 0.3, MAX_S = 1.6;
-const DEFAULT_EDGE_WIDTH = 2; // line thickness; slider, `edgeWidth` prop, or --cn-edge-width
+const DEFAULT_EDGE_WIDTH = 3; // line thickness; also adjustable via slider, prop, or --jc-edge-width
 const MOVE_MS = 520, CAM_MS = 560;
 
 const tree = data as unknown as Tree;
 const TYPE_LABEL = { yes_no: "Yes / no", single_choice: "Choose one", multi_choice: "Choose any" };
-const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-const humanize = (code: string) => cap(code.split("_").slice(1).join(" "));
+
+const humanize = (code: string) => {
+  const s = code.split("_").slice(1).join(" ");
+  return s.charAt(0).toUpperCase() + s.slice(1);
+};
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 const ease = (k: number) => 1 - Math.pow(1 - k, 4);
-const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reduceMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /* ───────── Canvas tree built once from the JSON ───────── */
 const model = (() => {
@@ -48,7 +55,7 @@ const model = (() => {
     for (const code of codes) {
       const id = `${p.id}#${code}`;
       if (m.has(id)) continue;
-      m.set(id, { id, kind: "art", label: humanize(code), sub: cap(code.split("_")[0]), code, parent: p.id, children: [], multi: false, h: H.art });
+      m.set(id, { id, kind: "art", label: humanize(code), code, parent: p.id, children: [], multi: false, h: H.art });
       p.children.push(id);
     }
   };
@@ -114,61 +121,14 @@ function layout(open: Set<string>): Map<string, XY> {
   return pos;
 }
 
-/* ───────── Public component: canvas ≥768px, stacked list below ───────── */
-type Props = { basePath?: string; edgeWidth?: number; height?: string };
-
-export default function Canvas({ basePath = "/articles", edgeWidth = DEFAULT_EDGE_WIDTH, height = "100vh" }: Props) {
-  const [mobile, setMobile] = useState(() => matchMedia("(max-width: 767px)").matches);
-  useEffect(() => {
-    const mq = matchMedia("(max-width: 767px)");
-    const on = () => setMobile(mq.matches);
-    mq.addEventListener("change", on);
-    return () => mq.removeEventListener("change", on);
-  }, []);
-  return (
-    <div className="cn-root" style={{ height }}>
-      {mobile ? <MobileList basePath={basePath} /> : <CanvasView basePath={basePath} edgeWidth={edgeWidth} />}
-    </div>
-  );
-}
-
-/* Mobile: plain nested list, canvas fully disabled. */
-function MobileList({ basePath }: { basePath: string }) {
-  const Branch = ({ id }: { id: string }) => {
-    const m = model.get(id)!;
-    if (m.kind === "art")
-      return (
-        <a className="cn-mlink" href={`${basePath}/${m.code}`}>
-          <span className="cn-mtitle">{m.label}</span>
-          <span className="cn-mexcerpt">{m.sub}</span>
-        </a>
-      );
-    const head = (
-      <>
-        <span className="cn-mtitle">{m.label}</span>
-        {m.sub && <span className="cn-mexcerpt">{m.sub}</span>}
-      </>
-    );
-    return m.children.length ? (
-      <details className="cn-mbranch">
-        <summary className="cn-mlink">{head}</summary>
-        <div className="cn-mkids">{m.children.map((c) => <Branch key={c} id={c} />)}</div>
-      </details>
-    ) : (
-      <div className="cn-mlink">{head}</div>
-    );
-  };
-  const root = model.get("root")!;
-  return (
-    <nav className="cn-mobile" aria-label="Prostate cancer journey">
-      <div className="cn-mlabel">{root.label}</div>
-      {root.children.map((c) => <Branch key={c} id={c} />)}
-    </nav>
-  );
-}
-
-/* ───────── Desktop / tablet canvas ───────── */
-function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: number }) {
+/* ───────── Component ───────── */
+export default function JourneyCanvas({
+  basePath = "/articles",
+  edgeWidth = DEFAULT_EDGE_WIDTH,
+}: {
+  basePath?: string;
+  edgeWidth?: number;
+}) {
   const [open, setOpen] = useState<Set<string>>(() => new Set(["root"]));
   const [focus, setFocus] = useState("root");
   const [tick, setTick] = useState(0);
@@ -192,8 +152,8 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
   const zoomEl = useRef<HTMLSpanElement>(null);
   const nodeEls = useRef(new Map<string, HTMLDivElement>());
   const edgeEls = useRef(new Map<string, SVGPathElement>());
-  const shown = useRef(new Map<string, XY>());
-  const off = useRef(new Map<string, XY>());
+  const shown = useRef(new Map<string, XY>()); // positions currently drawn
+  const off = useRef(new Map<string, XY>()); // user drag offsets
   const cam = useRef<Cam>({ x: 0, y: 0, s: 1 });
   const nodeAnim = useRef<{ t0: number; dur: number; from: Map<string, XY>; to: Map<string, XY> } | null>(null);
   const camAnim = useRef<{ t0: number; dur: number; from: Cam; to: Cam } | null>(null);
@@ -293,33 +253,14 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
       }
       if (x0 <= x1) {
         const vw = el.clientWidth, vh = el.clientHeight;
-        const pad = vw < 900 ? 28 : 72;
+        const pad = vw < 520 ? 20 : 72;
         const s = clamp(Math.min((vw - pad * 2) / (x1 - x0), (vh - pad * 2) / (y1 - y0)), MIN_S, 1);
-        camAnim.current = {
-          t0: performance.now(),
-          dur: instant ? 0 : CAM_MS,
-          from: { ...cam.current },
-          to: { s, x: vw / 2 - ((x0 + x1) / 2) * s, y: vh / 2 - ((y0 + y1) / 2) * s },
-        };
+        const target = { s, x: vw / 2 - ((x0 + x1) / 2) * s, y: vh / 2 - ((y0 + y1) / 2) * s };
+        camAnim.current = { t0: performance.now(), dur: instant ? 0 : CAM_MS, from: { ...cam.current }, to: target };
       }
     }
     kick();
   }, [pos, tick, kick]);
-
-  const zoomAt = (cx: number, cy: number, f: number) => {
-    const r = wrap.current!.getBoundingClientRect();
-    const px = cx - r.left, py = cy - r.top, c = cam.current;
-    const s2 = clamp(c.s * f, MIN_S, MAX_S), k = s2 / c.s;
-    cam.current = { x: px - (px - c.x) * k, y: py - (py - c.y) * k, s: s2 };
-    apply();
-  };
-  const zoomBy = (f: number) => {
-    const el = wrap.current!, c = cam.current;
-    const s2 = clamp(c.s * f, MIN_S, MAX_S), k = s2 / c.s;
-    const px = el.clientWidth / 2, py = el.clientHeight / 2;
-    camAnim.current = { t0: performance.now(), dur: 260, from: { ...c }, to: { x: px - (px - c.x) * k, y: py - (py - c.y) * k, s: s2 } };
-    kick();
-  };
 
   useEffect(() => {
     const el = wrap.current;
@@ -337,6 +278,21 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => { ro.disconnect(); el.removeEventListener("wheel", onWheel); };
   }, []);
+
+  const zoomAt = (cx: number, cy: number, f: number) => {
+    const r = wrap.current!.getBoundingClientRect();
+    const px = cx - r.left, py = cy - r.top, c = cam.current;
+    const s2 = clamp(c.s * f, MIN_S, MAX_S), k = s2 / c.s;
+    cam.current = { x: px - (px - c.x) * k, y: py - (py - c.y) * k, s: s2 };
+    apply();
+  };
+  const zoomBy = (f: number) => {
+    const el = wrap.current!, c = cam.current;
+    const s2 = clamp(c.s * f, MIN_S, MAX_S), k = s2 / c.s;
+    const px = el.clientWidth / 2, py = el.clientHeight / 2;
+    camAnim.current = { t0: performance.now(), dur: 260, from: { ...c }, to: { x: px - (px - c.x) * k, y: py - (py - c.y) * k, s: s2 } };
+    kick();
+  };
 
   /* ── Open / collapse ── */
   const frame = (ids: string[]) => { frameReq.current = { ids }; lastFrame.current = ids; };
@@ -366,20 +322,15 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
   };
   const fit = () => { frameReq.current = { ids: lastFrame.current }; setTick((t) => t + 1); };
 
-  const lit = (id: string, on: boolean) => {
-    for (const e of edgesRef.current)
-      if (e.from === id || e.to === id) edgeEls.current.get(e.key)?.classList.toggle("lit", on);
-  };
-
   /* ── Background pan + pinch ── */
   const ptrs = useRef(new Map<number, XY>());
   const lastDist = useRef(0);
   const onDown = (e: React.PointerEvent) => {
-    if (e.button !== 0 || (e.target as HTMLElement).closest(".cn-node,.cn-hud")) return;
+    if ((e.target as HTMLElement).closest(".jc-node,.jc-hud")) return;
     wrap.current!.setPointerCapture(e.pointerId);
     ptrs.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     camAnim.current = null;
-    wrap.current!.classList.add("grabbing");
+    wrap.current!.classList.add("is-panning");
     if (ptrs.current.size === 2) {
       const [a, b] = [...ptrs.current.values()];
       lastDist.current = Math.hypot(a.x - b.x, a.y - b.y);
@@ -402,7 +353,7 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
   };
   const onUp = (e: React.PointerEvent) => {
     ptrs.current.delete(e.pointerId);
-    if (!ptrs.current.size) wrap.current!.classList.remove("grabbing");
+    if (!ptrs.current.size) wrap.current!.classList.remove("is-panning");
   };
 
   /* ── Node drag; a click without movement activates the node ── */
@@ -417,7 +368,7 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
     const move = (ev: PointerEvent) => {
       const dx = ev.clientX - sx, dy = ev.clientY - sy;
       if (!moved && Math.hypot(dx, dy) < 4) return;
-      if (!moved) { moved = true; el.classList.add("dragging"); nodeAnim.current = null; }
+      if (!moved) { moved = true; el.classList.add("is-dragging"); nodeAnim.current = null; }
       const nx = p0.x + dx / cam.current.s, ny = p0.y + dy / cam.current.s;
       off.current.set(id, { x: nx - base.x, y: ny - base.y });
       shown.current.set(id, { x: nx, y: ny });
@@ -427,7 +378,7 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
     const up = () => {
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
-      el.classList.remove("dragging");
+      el.classList.remove("is-dragging");
       if (moved) suppressClick.current = true;
       else activate(id);
     };
@@ -435,23 +386,24 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
     window.addEventListener("pointerup", up);
   };
 
+  /* ── Render ── */
   return (
     <div
       ref={wrap}
-      className="cn-wrap"
-      style={{ "--cn-edge-width": edgeW } as React.CSSProperties}
+      className="jc-root"
+      style={{ "--jc-edge-width": edgeW } as React.CSSProperties}
       onPointerDown={onDown}
       onPointerMove={onMove}
       onPointerUp={onUp}
       onPointerCancel={onUp}
     >
-      <div ref={world} className="cn-world">
-        <svg className="cn-edges" width="1" height="1" aria-hidden="true">
+      <div ref={world} className="jc-world">
+        <svg className="jc-edges" width="1" height="1" aria-hidden="true">
           {edges.map((e) => (
             <path
               key={e.key}
               ref={(el) => { el ? edgeEls.current.set(e.key, el) : edgeEls.current.delete(e.key); }}
-              className={`edge${pathSet.has(e.to) ? " path" : ""}`}
+              className={pathSet.has(e.to) ? "is-path" : ""}
             />
           ))}
         </svg>
@@ -460,22 +412,14 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
           const m = model.get(id)!;
           const isOpen = open.has(id) && m.kind === "opt";
           const cls = [
-            "cn-node",
-            m.kind,
-            isOpen && "open",
-            focus === id && "here",
-            pathSet.has(id) && "onpath",
-            m.multi && "multi",
-            m.kind === "opt" && !m.children.length && "dead",
+            "jc-node",
+            `jc-${m.kind}`,
+            isOpen && "is-open",
+            focus === id && "is-focus",
+            pathSet.has(id) && "is-onpath",
+            m.multi && "is-multi",
+            m.kind === "opt" && !m.children.length && "is-dead",
           ].filter(Boolean).join(" ");
-          const eyebrow = m.kind === "root" ? "question" : m.kind === "art" ? "article" : m.multi ? "answer · pick any" : "answer";
-          const body = (
-            <>
-              <div className="eyebrow">{eyebrow}</div>
-              <h3>{m.label}</h3>
-              {m.sub && <p>{m.sub}</p>}
-            </>
-          );
           return (
             <div
               key={id}
@@ -483,62 +427,63 @@ function CanvasView({ basePath, edgeWidth }: { basePath: string; edgeWidth: numb
               className={cls}
               style={{ width: W, height: m.h }}
               onPointerDown={(e) => startDrag(e, id)}
-              onPointerEnter={() => lit(id, true)}
-              onPointerLeave={() => lit(id, false)}
             >
               {m.kind === "art" ? (
                 <a
-                  className="cn-card"
+                  className="jc-card"
                   href={`${basePath}/${m.code}`}
                   title={m.code}
                   draggable={false}
                   onClick={(e) => { if (suppressClick.current) { e.preventDefault(); suppressClick.current = false; } }}
                 >
-                  {body}
+                  <span className="jc-label">{m.label}</span>
                 </a>
               ) : (
                 <div
-                  className="cn-card"
+                  className="jc-card"
                   role={m.kind === "opt" ? "button" : undefined}
                   tabIndex={m.kind === "opt" ? 0 : undefined}
                   aria-expanded={m.kind === "opt" && m.children.length ? isOpen : undefined}
                   onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), activate(id))}
                 >
-                  {body}
+                  {m.kind === "opt" && <i className="jc-mark" />}
+                  <div className="jc-body">
+                    {m.kind === "root" && <span className="jc-sub">{m.sub}</span>}
+                    <span className="jc-label">{m.label}</span>
+                    {m.kind === "opt" && m.sub && <span className="jc-sub">{m.sub}</span>}
+                  </div>
                 </div>
-              )}
-              {m.kind === "opt" && m.children.length > 0 && (
-                <span className="child-badge">{isOpen ? "▾" : "▸"} {m.children.length}</span>
               )}
             </div>
           );
         })}
       </div>
 
-      {/* <div id="legend" className="cn-hud">
-        <div className="row"><span className="dot core" /> question</div>
-        <div className="row"><span className="dot content" /> answer</div>
-        <div className="row"><span className="dot utility" /> article</div>
-        <div className="hint">drag background to pan · scroll to zoom · click a node to open its branch · drag nodes to rearrange</div>
-      </div> */}
-
-      <div className="cn-hud cn-controls">
-        <div id="panel" className={`cn-panel${panelOpen ? "" : " is-hidden"}`}>
-          <div className="cn-row">
-            <button type="button" onClick={() => zoomBy(1 / 1.25)} aria-label="Zoom out">−</button>
-            <span ref={zoomEl} id="zoom-label">100%</span>
-            <button type="button" onClick={() => zoomBy(1.25)} aria-label="Zoom in">+</button>
-          </div>
-          <button type="button" onClick={fit}>Fit view</button>
-          <button type="button" onClick={startOver}>Start over</button>
-          <label className="cn-slider">
-            <span>Line thickness</span>
-            <input type="range" min={1} max={8} step={0.5} value={edgeW} onChange={(e) => setEdgeW(Number(e.target.value))} />
-          </label>
-        </div>
-        <button type="button" className="cn-toggle" aria-expanded={panelOpen} aria-controls="panel" onClick={() => setPanelOpen((v) => !v)}>
+      <div className="jc-hud">
+        <button
+          className="jc-toggle"
+          aria-expanded={panelOpen}
+          aria-controls="jc-panel"
+          onClick={() => setPanelOpen((v) => !v)}
+        >
           {panelOpen ? "Hide controls" : "Controls"}
         </button>
+        <div id="jc-panel" className={`jc-panel${panelOpen ? "" : " is-hidden"}`}>
+          <div className="jc-row">
+            <button onClick={() => zoomBy(1 / 1.25)} aria-label="Zoom out">−</button>
+            <span ref={zoomEl} className="jc-zoom">100%</span>
+            <button onClick={() => zoomBy(1.25)} aria-label="Zoom in">+</button>
+          </div>
+          <button onClick={fit}>Fit view</button>
+          <button onClick={startOver}>Start over</button>
+          <label className="jc-slider">
+            <span>Line thickness</span>
+            <input
+              type="range" min={1} max={8} step={0.5} value={edgeW}
+              onChange={(e) => setEdgeW(Number(e.target.value))}
+            />
+          </label>
+        </div>
       </div>
     </div>
   );

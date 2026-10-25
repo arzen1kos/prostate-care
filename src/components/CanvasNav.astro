@@ -57,12 +57,12 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
 <div class="canvas-nav-root" style={`height: ${height};`}>
   <!-- Desktop / tablet: interactive canvas -->
   <div class="desktop-canvas">
-    <!-- <div id="legend">
+    <div id="legend">
       <div class="row"><span class="dot core"></span> core page</div>
       <div class="row"><span class="dot content"></span> content page</div>
       <div class="row"><span class="dot utility"></span> utility page</div>
       <div class="hint">drag background to pan · scroll to zoom · left-click to open · right-click to expand/collapse</div>
-    </div> -->
+    </div>
 
     <div id="canvas-wrap">
       <div id="canvas-inner">
@@ -360,7 +360,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     setZoom(scale - 0.15, r.left + r.width / 2, r.top + r.height / 2);
   }
   function zoomResetHandler() {
-    scale = 1; tx = -500; ty = -100; applyTransform();
+    scale = 1; tx = 0; ty = 0; applyTransform();
   }
 
   function syncToViewport(e) {
@@ -387,13 +387,13 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
   }
 
   /* --- desktop/tablet canvas (default) --- */
-  .desktop-canvas { display: block; width: 100%; height: 100vh; position: relative; }
+  .desktop-canvas { display: block; width: 100%; height: 100%; position: relative; }
   .mobile-fallback { display: none; }
 
   #canvas-wrap {
     position: relative;
     width: 100%;
-    height: 80vh;
+    height: 100%;
     overflow: hidden;
     cursor: grab;
     /* background-color: var(--ink); */
@@ -519,10 +519,10 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
 
   #controls {
     position: absolute;
-    top: 16px; left: 16px;
+    bottom: 16px; left: 16px;
     z-index: 10;
     display: flex;
-    gap: 2px;
+    gap: 8px;
     align-items: center;
   }
   #controls button {
@@ -541,7 +541,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
   #zoom-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: #00007e;
+    color: var(--text-dim);
     width: 42px;
     text-align: center;
   }
