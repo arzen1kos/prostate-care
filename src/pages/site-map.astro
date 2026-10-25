@@ -1,0 +1,57 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Canvas from '@components/Canvas.tsx'
+
+// src/pages/sitemap.astro (or wherever you want the canvas to live)
+import CanvasNav from '@components/CanvasNav.astro';
+ 
+// edges are DIRECTED [parentId, childId] — this drives both the lines
+// AND which nodes collapse together when you right-click a parent.
+const nodes = [
+  { id: 'home',    title: 'Home',            excerpt: 'Landing page, entry point', url: '/',           x: 1000, y: 120, type: 'core' },
+  { id: 'about',   title: 'About',           excerpt: 'Who this is for',           url: '/about',      x: 660,  y: 320, type: 'core' },
+  { id: 'work',    title: 'Work / Services', excerpt: 'What is offered',           url: '/work',       x: 1340, y: 320, type: 'core' },
+  { id: 'case1',   title: 'Case study',      excerpt: 'Project deep-dive',         url: '/work/case1', x: 1200, y: 520, type: 'content' },
+  { id: 'case2',   title: 'Case study',      excerpt: 'Second deep-dive',          url: '/work/case2', x: 1480, y: 520, type: 'content' },
+  { id: 'blog',    title: 'Blog',            excerpt: 'Articles and updates',      url: '/blog',       x: 660,  y: 560, type: 'content' },
+  { id: 'post1',   title: 'Latest post',     excerpt: 'Most recent article',       url: '/blog/1',     x: 500,  y: 760, type: 'content' },
+  { id: 'post2',   title: 'Featured post',   excerpt: 'Pinned article',            url: '/blog/2',     x: 800,  y: 760, type: 'content' },
+  { id: 'contact', title: 'Contact',         excerpt: 'Get in touch',              url: '/contact',    x: 1000, y: 780, type: 'core' },
+];
+ 
+const edges: [string, string][] = [
+  ['home', 'about'],
+  ['home', 'work'],
+  ['home', 'contact'],
+  ['work', 'case1'],   // right-click "Work / Services" to collapse these two
+  ['work', 'case2'],
+  ['about', 'blog'],
+  ['blog', 'post1'],   // right-click "Blog" to collapse these two
+  ['blog', 'post2'],
+];
+
+// Optional: give real titles/urls for article codes instead of the
+// auto-humanized fallback (code -> "Patient Stage0" / "What It Means").
+// Anything not listed here still works — it just falls back to
+// `articleBaseUrl + code` as the link and a humanized title.
+//
+// const articleIndex = {
+//   patient_stage0_what_it_means: {
+//     title: 'What does Stage 0 mean?',
+//     url: '/articles/patient/stage-0/what-it-means',
+//   },
+// };
+
+const title: string = "Site Map"
+
+---
+
+<Layout
+  title=`${title}| Prostate Cancer Foundation NZ`
+  description=`X`
+>
+    <div class="pt-2 md:px-6">
+    <!-- <Canvas client:only="react"/> -->
+     <CanvasNav nodes={nodes} edges={edges} currentPath={Astro.url.pathname} height="100vh" />
+    </div>
+</Layout>

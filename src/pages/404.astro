@@ -1,10 +1,9 @@
 ---
-// <!-- Not imported by any file -->
 import Layout from '@/layouts/Layout.astro';
 import Breadcrumbs from '@components/ui/Breadcrumbs.astro';
 
 const breadcrumbItems = [
-  { label: 'Empty Page', href: '/page-under-development.astro', current: true }
+  { label: 'Empty Page', href: '/404.astro', current: true }
 ];
 ---
 <Layout title="Page under development">
@@ -21,6 +20,6 @@ const breadcrumbItems = [
   <script>
     setTimeout(() => {
       window.location.replace('/welcome');
-    }, 300);
+    }, 7000);
   </script>
 </Layout>

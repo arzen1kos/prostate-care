@@ -1,0 +1,159 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const collection: any = await getCollection("clinics");
+const clinics: any = collection
+  .filter(({ data }: CollectionEntry<"clinics">) => data.kind === "clinic")
+  .map(({ data }: CollectionEntry<"clinics">) => data);
+const groups = collection
+  .filter(({ data }: CollectionEntry<"clinics">) => data.kind === "support-group")
+  .map(({ data }: CollectionEntry<"clinics">) => data);
+const breadcrumbItems = [
+  { label: "Home", link: "/", current: false },
+  { label: "Clinics and support groups", link: "/clinics", current: true },
+];
+
+const title: string = "Clinics and Support Groups"
+const description: string = "Find prostate cancer clinics and community support groups in Aotearoa New Zealand."
+---
+
+<Layout
+  title=`${title}| Prostate Cancer Foundation NZ`
+  description={description}
+>
+  <div class="container mx-auto px-5 pt-10 pb-20 md:px-8">
+    <!-- <MainPageHeading
+      heading="Clinics and Support Groups"
+      description={[
+        "Find local cancer-care services and community support. Contact a provider to confirm current services, availability, and appointment details.",
+      ]}
+      breadcrumbItems={breadcrumbItems}
+    /> -->
+
+    <div>
+      <!-- <Breadcrumbs items={breadcrumbItems} /> -->
+      <h1 class="text-6xl font-bold mb-2">{title}</h1>
+        {description}
+        <ul style="padding-left:2rem" class="ml-4 mt-2 group-open:animate-fade-in">
+          <!-- {Array.isArray(description) && description.map((p, i) => (
+            <li class="mb-4 text-(--color-palette-four)">{p}</li>
+          ))} -->
+        </ul>
+      <hr class="my-4 border-t border-(--color-palette-gray)" />
+    </div>   
+
+
+    <section aria-labelledby="clinic-list-heading" class="mt-10">
+      <h2 id="clinic-list-heading" class="text-2xl font-bold">
+        Clinics
+      </h2>
+      <div class="mt-6 grid gap-6 md:grid-cols-3 sm:grid-cols-1">
+        {
+          clinics.map((clinic) => (
+            <article class="flex flex-col rounded-xl border border-neutral-200 bg(--color-palette-four)] p-6 shadow-sm">
+              <h3 class="text-xl font-bold text(--color-palette-one)">
+                {clinic.name}
+              </h3>
+              <p class="mt-2 font-semibold text(--color-palette-two)">
+                {clinic.description}
+              </p>
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2893.5842942087893!2d172.61498267545264!3d-43.51100697110929!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6d318bb3d9c32c67%3A0xb9caa473823d9fe0!2sSt%20George%E2%80%99s%20Hospital!5e0!3m2!1sen!2snz!4v1792921089828!5m2!1sen!2snz" width="250" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              <address class="mt-3 flex-1 whitespace-pre-line not-italic text-md text(--color-palette-two)">
+                {clinic.address.join("\n")}
+              </address>
+              {clinic.phone && (
+                <p class="mt-3 text-sm">
+                  Phone:{" "}
+                  <a
+                    class="underline"
+                    href={`tel:${clinic.phone.replace(/\s+/g, "")}`}
+                  >
+                    {clinic.phone}
+                  </a>
+                </p>
+              )}
+              <a
+                class="mt-5 inline-flex w-fit rounded-md px-4 py-2 font-semiboldfocus-visible:outline-2 focus-visible:outline-offset-2"
+                href={clinic.link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Directions and details{" "}
+                <span class="sr-only">
+                  for {clinic.name} (opens in a new tab)
+                </span>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <section aria-labelledby="support-groups-heading" class="mt-14">
+      <h2 id="support-groups-heading" class="text-2xl font-bold text-secondary">
+        Support Groups
+      </h2>
+      <div class="mt-6 grid gap-6 md:grid-cols-1">
+        {
+          groups.map((group) => (
+            <article class="flex flex-col rounded-xl border border-neutral-200 p-6 shadow-sm">
+              <p class="text-sm font-semibold uppercase tracking-wide">
+                {group.region}
+              </p>
+              <h3 class="mt-2 text-xl font-bold text-neutral-800">
+                {group.name}
+              </h3>
+              <p class="mt-3 flex-1 leading-relaxed text-neutral-700">
+                {group.description}
+              </p>
+              {group.location && (
+                <p class="mt-3 text-sm">
+                  <strong>Location:</strong> {group.location}
+                </p>
+              )}
+              {group.recurrence && (
+                <p class="mt-2 text-sm">
+                  <strong>Schedule:</strong> {group.recurrence}
+                </p>
+              )}
+              {group.link && (
+                <a
+                  class="mt-4 w-fit text-blue-700 underline underline-offset-2 hover:text-blue-900"
+                  href={group.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Find out more{" "}
+                  <span class="sr-only">
+                    about {group.name} (opens in a new tab)
+                  </span>
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <aside
+      class="mt-12 rounded-lg bg(--color-palette-one)] p-6 text(--color-palette-five)"
+    >
+      <h2 class="text-xl font-bold">Looking for more support near you?</h2>
+      <p class="mt-2">
+        The Cancer Society of New Zealand connects people and whānau affected by
+        cancer with local information and community support.
+      </p>
+      <a
+        class="mt-4 inline-block underline underline-offset-2"
+        href="https://www.cancer.org.nz/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Explore Cancer Society support options <span class="sr-only"
+          >(opens in a new tab)</span
+        >
+      </a>
+    </aside>
+  </div>
+</Layout>

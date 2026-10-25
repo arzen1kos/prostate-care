@@ -8,13 +8,11 @@ const { title, initialMessage, placeholder, buttonText, responses } = chatboxCon
 <!-- Chat Overlay Button -->
 <div
   id="button-overlay"
-  class=""
+  class="quick-link"
   >
   <button 
     id="chat-overlay-button" 
-    class=`
-    bg-[var(--color-palette-accent)] rounded-sm p-4 shadow-xl flex items-center justify-center transform transition-all duration-300 hover:scale-110
-    `
+    class=``
     aria-label="Chat Support"
   >
     <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,8 +23,8 @@ const { title, initialMessage, placeholder, buttonText, responses } = chatboxCon
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="var(--color-palette-five)"
-      stroke="var(--color-palette-two)"
+      fill="var(--color-lavender)"
+      stroke="var(--color-chat)"
       stroke-width="2"
       stroke-linecap="round"
       stroke-linejoin="round"
@@ -42,7 +40,7 @@ const { title, initialMessage, placeholder, buttonText, responses } = chatboxCon
 </div>
 
 <!-- Chat Box -->
-<div id="chat-overlay" class="fixed bottom-6 right-6 z-50 group md:static md:inset-0">
+<!-- <div id="chat-overlay" class="fixed bottom-6 right-6 z-50 group md:static md:inset-0">
   <div
     id="chat-box"
      class="hidden fixed rounded-lg shadow-lg overflow-hidden theme-transition
@@ -50,8 +48,23 @@ const { title, initialMessage, placeholder, buttonText, responses } = chatboxCon
            md:w-95 md:h-120 md:translate-x-0 md:translate-y-0 md:left-auto md:top-auto md:right-6 md:bottom-6">
     <iframe src="https://copilotstudio.microsoft.com/environments/Default-ef475ff3-7cd1-4fa3-ba77-f63824f7c37c/bots/cr4d1_prometheus/webchat?__version__=2" frameborder="0" style="width: 100%; height: 100%;"></iframe>
   </div>
-</div>
+</div> -->
 
+<style>
+  #button-overlay, #chat-overlay-button {
+    align-items: center;
+    display: grid;
+    width: 2.65rem;
+    height: 2.65rem;
+    place-items: center;
+    border-radius: 20%;
+    /* background-color: #00007e44; */
+  }
+
+  #button-overlay:hover, #chat-overlay-button:hover {
+    background-color: #f5f5fa;
+  }
+</style>
 <script>
   // // Extend the Window interface to include chatboxContent
   // //  * @property {string} greeting
