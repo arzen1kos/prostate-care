@@ -1,0 +1,220 @@
+---
+import Layout from '@layouts/Layout.astro';
+import stages from '@contents/pages/patient-path.json';
+import HubLanding from '@layouts/HubLanding.astro';
+import { getEntry } from 'astro:content';
+
+const page = await getEntry("hubPages", "patients");
+if (!page) throw new Error("Missing hub page content: patients");
+const content = page.data;
+
+---
+
+<Layout
+    title="Patient Support Hub | Prostate Cancer Foundation NZ"
+    description="Find information for navigating prostate cancer diagnosis, treatment, and well-being."
+>
+  <HubLanding content={content}>
+    <div class="hub__content">
+      <h2>I am looking for information on...</h2>
+      <div class="patient-path__stages">
+      {stages.map((stage, index) => (
+          <details open={index === 0}>
+          <summary>{stage.label}<span aria-hidden="true">⌄</span></summary>
+          <ul class="patient-path__topics">
+              {stage.topics.map((topic) => (
+              <li>
+                  <a href={topic.href}>
+                  <img src="/public/assets/placeholders/placeholder-cards.png" alt="" loading="lazy" />
+                  <span>{topic.title}</span>
+                  </a>
+              </li>
+              ))}
+          </ul>
+          </details>
+      ))}
+      </div>
+    </div>
+  </HubLanding>
+
+    <!-- <section class="patient-path hub">
+    <div class="patient-path__hero hub__hero">
+        <div>
+        <nav aria-label="Breadcrumb">
+            <a href="/welcome">Home</a><span aria-hidden="true">›</span><span>Finding your way</span>
+        </nav>
+        <h1>Every journey is different.<br />Let’s find the information you need.</h1>
+        <p>
+            Choose the clinical stage or topic that best reflects where you or someone you love is today.
+            We’ll show you related information to explore with your healthcare team.
+        </p>
+        <img src="/assets/thumbnails/hero-patient-path.png" alt="" />
+        </div>
+    </div>
+    <div class="patient-path__body">
+        <h2>I am looking for information on...</h2>
+        <div class="patient-path__stages">
+        {stages.map((stage, index) => (
+            <details open={index === 0}>
+            <summary>{stage.label}<span aria-hidden="true">⌄</span></summary>
+            <ul class="patient-path__topics">
+                {stage.topics.map((topic) => (
+                <li>
+                    <a href={topic.href}>
+                    <img src="/public/assets/placeholders/placeholder-cards.png" alt="" loading="lazy" />
+                    <span>{topic.title}</span>
+                    </a>
+                </li>
+                ))}
+            </ul>
+            </details>
+        ))}
+        </div>
+    </div>
+    </section> -->
+</Layout>
+
+<style>
+  /* .patient-path__hero > div {
+    position: relative;
+    padding-right: min(22vw, 16rem);
+  } */
+
+  /* .patient-path__hero nav {
+    display: flex;
+    gap: 0.45rem;
+    color: var(--color-indigo);
+    font-size: 0.8rem;
+  } */
+
+  .patient-path__hero h1 {
+    /* margin: 0.5rem 0 0;
+    font-size: clamp(1.8rem, 3.5vw, 2.65rem);
+    font-weight: 800;
+    line-height: 1.08; */
+  }
+
+  .patient-path__hero p {
+    /* max-width: 45rem;
+    margin: 0.7rem 0 0;
+    color: var(--color-ink-muted);
+    font-size: 0.9rem;
+    line-height: 1.55; */
+  }
+
+  .patient-path__hero > div > img {
+    /* position: absolute;
+    top: 1rem;
+    right: 0;
+    width: min(20vw, 13rem);
+    height: 12rem;
+    object-fit: contain; */
+  }
+
+  .hub__content {
+  /* .patient-path__body { */
+    width: min(100% - 3rem, 74rem);
+    margin-inline: auto;
+    padding-bottom: 3.5rem;
+  }
+
+  .hub__content h2 {
+    margin: 0 0 1rem;
+    font-size: 1.25rem;
+  }
+
+  .patient-path__stages {
+    display: grid;
+    gap: 0.55rem;
+  }
+
+  .patient-path__stages details {
+    border: 1px solid var(--color-line);
+    background: #c7c4c2;
+  }
+
+  .patient-path__stages summary {
+    display: flex;
+    min-height: 3.3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 1rem;
+    color: var(--color-indigo);
+    cursor: pointer;
+    font-size: 0.84rem;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .patient-path__stages summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .patient-path__stages details[open] > summary {
+    background: #3a0d0259;
+    color: var(--color-navy);
+    font-weight: 800;
+  }
+
+  .patient-path__topics {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(8.8rem, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 1rem;
+    list-style: none;
+  }
+
+  .patient-path__topics a {
+    display: flex;
+    min-height: 8rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border: 1px solid var(--color-indigo);
+    border-radius: 0.45rem;
+    padding: 0.7rem;
+    color: var(--color-indigo);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .patient-path__topics a:hover {
+    background: var(--color-lavender);
+  }
+
+  .patient-path__topics img {
+    width: 3.4rem;
+    height: 3.4rem;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  @media (max-width: 620px) {
+    .patient-path__hero,
+    .patient-path__body {
+      width: min(100% - 1.5rem, 74rem);
+    }
+
+    .patient-path__hero > div {
+      padding-right: 0;
+    }
+
+    .patient-path__hero > div > img {
+      position: static;
+      display: block;
+      width: 7rem;
+      height: 7rem;
+      margin-left: auto;
+    }
+
+    .patient-path__topics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding: 0.65rem;
+    }
+  }
+</style>

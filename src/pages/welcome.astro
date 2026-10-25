@@ -1,0 +1,163 @@
+---
+import Layout from '@layouts/Layout.astro';
+---
+
+<Layout
+  title="Welcome | Prostate Cancer Support Aotearoa"
+  description="Choose a pathway to patient information, whānau support, or prostate cancer research."
+>
+  <section class="welcome">
+    <section class="welcome__intro" aria-labelledby="welcome-heading">
+      <a class="splash__return" href="/">
+        <img src="/assets/logo/prometheus-app-logo.png" alt="Logo" />
+      </a>
+      <p lang="mi">Te tautoko mō te matepukupuku repe tāne</p>
+      <h1 id="welcome-heading">Welcome. How can we help you today?</h1>
+      <p class="welcome__hint">
+        Choose the path that fits where you are. Each one opens resources
+        written for you.
+      </p>
+    </section>
+    <nav class="welcome__paths" aria-label="Choose your information pathway">
+      <a class="welcome-card welcome-card--research" href="/research-hub">
+        <img src="/assets/thumbnails/hero-researcher-path.png" alt="" />
+        <h2>I am looking for clinical data or research</h2>
+        <p>
+          For researchers, clinicians, and students seeking family-supportpeer-reviewed
+          journals, research, and statistics.
+        </p>
+      </a>
+      <a class="welcome-card welcome-card--patient" href="/patient-space">
+        <img src="/assets/thumbnails/hero-patient-path.png" alt="" />
+        <h2>I am navigating my own diagnosis</h2>
+        <p>
+          Understand prostate cancer, explore treatment choices, or manage
+          day-to-day health.
+        </p>
+      </a>
+      <a class="welcome-card welcome-card--family" href="/family-support">
+        <img src="/assets/thumbnails/hero-family-path.png" alt="" />
+        <h2>I am supporting a loved one</h2>
+        <p>
+          For whānau, partners, and friends looking for care guidance,
+          coordination, and support.
+        </p>
+      </a>
+    </nav>
+  </section>
+</Layout>
+
+<style>
+  .welcome {
+    min-height: calc(100svh - 7rem);
+    color: var(--color-navy);
+  }
+
+  .welcome__intro {
+    max-width: 50rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .welcome__intro img {
+    width: 3rem;
+    height: 3rem;
+    margin-inline: auto;
+    object-fit: contain;
+  }
+
+  .welcome__intro p:first-of-type {
+    margin: 0.7rem 0 0;
+    color: var(--color-ink-muted);
+  }
+
+  .welcome__intro h1 {
+    margin: 0.35rem 0 0;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .welcome__hint {
+    margin: 0.6rem 0 0;
+    color: var(--color-ink-muted);
+    font-size: 0.95rem;
+  }
+
+  .welcome__paths {
+    display: grid;
+    width: min(100%, 57rem);
+    margin: clamp(3.2rem, 13vh, 7.7rem) auto 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: clamp(1rem, 4vw, 2.9rem);
+  }
+
+  .welcome-card {
+    position: relative;
+    display: flex;
+    min-height: 14rem;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 2rem;
+    padding: 4.4rem 1rem 1.2rem;
+    background: var(--color-lavender);
+    color: var(--color-navy);
+    text-align: center;
+    text-decoration: none;
+    transition:
+      transform 160ms ease,
+      box-shadow 160ms ease;
+  }
+
+  .welcome-card:nth-child(2) {
+    min-height: 15rem;
+  }
+
+  .welcome-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgb(16 12 145 / 12%);
+  }
+
+  .welcome-card:focus-visible {
+    outline: 3px solid var(--color-indigo);
+    outline-offset: 4px;
+  }
+
+  .welcome-card img {
+    position: absolute;
+    top: -3rem;
+    width: 7rem;
+    height: 7rem;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .welcome-card h2 {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .welcome-card p {
+    margin: 0.8rem 0 0;
+    color: #353242;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  @media (max-width: 720px) {
+    .welcome__paths {
+      max-width: 30rem;
+      grid-template-columns: 1fr;
+      gap: 4rem;
+    }
+
+    .welcome-card,
+    .welcome-card:nth-child(2) {
+      min-height: 12rem;
+    }
+  }
+</style>

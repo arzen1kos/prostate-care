@@ -1,18 +1,7 @@
 ---
-// <!-- Referenced by: pages/about.astro, pages/blobs/index.astro, pages/bluenode/d3-version.astro, pages/bluenode/index.astro, pages/design-system.astro, pages/features.astro, pages/get-involved/index.astro, pages/help/index.astro, pages/index.astro, pages/information-and-support/index.astro, pages/news/index.astro, pages/newsletter.astro, pages/research/index.astro, pages/services.astro, pages/shop/index.astro -->
-// This is a compatibility layout that redirects to BaseLayout
-// It's kept for backward compatibility with existing pages
-import Footer from '../components/layout/footer/Footer.astro';
-import Header from '../components/layout/header/Header.astro';
-// import ChatBox from '../components/common/ChatBox.astro';
-import BackToTop from '../components/common/BackToTop.astro';
-import Button from '../components/ui/Button.astro';
-// import Breadcrumbs from '../components/ui/Breadcrumbs.astro';
-import '../styles/globals.css';
-
-// const breadcrumbItems = [
-//   { label: '', href: '/', current: true }
-// ];
+import Footer from './Footer.astro';
+import Header from './Header.astro';
+import '@styles/globals.css';
 
 interface Props {
   title: string;
@@ -52,7 +41,9 @@ const { title, description = 'BlueprintNZ - Modern web solutions' } = Astro.prop
     </script>
   </head>
   <body class="min-h-screen flex flex-col">
-    <Header label="Home" href="/" icon="home" />
+    <!-- <Header label="Home" href="/" icon="home" /> -->
+    <Header title={title} showBrand={!title.startsWith("Welcome")} />
+
     <!-- <Breadcrumbs items={breadcrumbItems} /> -->
 
     <main class="flex-grow">
@@ -72,17 +63,4 @@ const { title, description = 'BlueprintNZ - Modern web solutions' } = Astro.prop
   </body>
 </html>
 <script>
-  const scrollBtn = document.getElementById("scrollToTop");
-
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 300) {
-      scrollBtn.classList.remove("opacity-0", "pointer-events-none");
-    } else {
-      scrollBtn.classList.add("opacity-0", "pointer-events-none");
-    }
-  });
-
-  scrollBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
 </script>

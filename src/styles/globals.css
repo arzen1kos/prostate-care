@@ -7,3 +7,17 @@
 @import './components.css';
 @import './markdown.css';
 @import './utilities.css';
+
+:root {
+  --color-cream: #fff3e4;
+  --color-navy: #100c91;
+  --color-indigo: #3536a3;
+  --color-lavender: #deddf8;
+  --color-lavender-strong: #c9c7f1;
+  --color-ink-muted: #6e6a75;
+  --color-surface-muted: #e4e3e3;
+  --color-line: #c9c0b7;
+  --color-chat: #171625;
+
+  --width-content: min(100% - 13.5rem, 96rem);
+}

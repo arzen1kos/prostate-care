@@ -1,0 +1,153 @@
+---
+import Layout from '@layouts/Layout.astro';
+import HubLanding from '@layouts/HubLanding.astro';
+import { getEntry } from 'astro:content';
+
+const page = await getEntry("hubPages", "families");
+if (!page) throw new Error("Missing hub page content: families");
+const content = page.data;
+---
+
+<Layout
+  title={`${content.title} | Prostate Cancer Foundation NZ`}
+  description={content.description}
+>
+  <HubLanding content={content}>
+    <div class="hub__body">
+      {content.sections.map((section: any) => (
+        <section class="hub__section" aria-label={section.heading}>
+          <h2>{section.heading}</h2>
+          <div class="hub__cards">
+            {section.cards.map((card: any) => (
+              <article class="hub__card">
+                <img src="/assets/placeholders/placeholder-cards.png" alt="" loading="lazy" />
+                <h3>{card.title}</h3>
+                <p>{card.description}</p>
+                {card.href && (
+                  <a href={card.href}>Explore this topic <span class="visually-hidden">: {card.title}</span></a>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </HubLanding>
+</Layout>
+
+<style>
+  .hub__body {
+    width: min(100% - 3rem, 74rem);
+    margin-inline: auto;
+    padding-bottom: 3.5rem;
+    /* width: var(--width-content); */
+    /* margin-inline: auto; */
+    /* padding-block: clamp(2rem, 5vw, 3.5rem); */
+  }
+
+  .hub__section + .hub__section {
+    margin-top: 2.5rem;
+  }
+
+  .hub__section h2 {
+    margin: 0 0 1rem;
+    color: var(--color-navy);
+    font-size: 1.25rem;
+  }
+
+  .hub__cards {
+    display: grid;
+    margin-top: 1.15rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13.5rem), 1fr));
+    gap: 1.1rem;
+  }
+
+  .hub__card {
+    display: flex;
+    min-height: 13rem;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid var(--color-lavender-strong);
+    border-radius: 0.55rem;
+    padding: 1.2rem;
+    background: rgb(255 243 228 / 72%);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  .hub__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgb(16 12 145 / 10%);
+  }
+
+  .hub__card img {
+    width: 4.4rem;
+    height: 4.4rem;
+    margin-inline: auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .hub__card h3 {
+    margin: 0.7rem 0 0;
+    color: var(--color-indigo);
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  .hub__card p {
+    margin: 0.5rem 0 0;
+    color: #383543;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+
+  .hub__card a {
+    margin-top: auto;
+    padding-top: 1rem;
+    color: var(--color-indigo);
+    font-size: 0.86rem;
+    font-weight: 700;
+    text-underline-offset: 0.15em;
+  }
+
+  .hub__notice {
+    margin-top: 2rem;
+    border-left: 3px solid var(--color-indigo);
+    padding: 0.7rem 1rem;
+    background: var(--color-lavender);
+    color: #302d40;
+    font-size: 0.9rem;
+  }
+
+  .hub__browse {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .hub__browse a {
+    border: 1px solid var(--color-lavender-strong);
+    border-radius: 0.3rem;
+    padding: 0.55rem 0.75rem;
+    color: var(--color-indigo);
+    font-size: 0.85rem;
+    text-decoration: none;
+  }
+  @media (max-width: 620px) {
+    .hub__content {
+      width: var(--width-content);
+    }
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  
+</style>
