@@ -1,0 +1,133 @@
+.trigger {
+  display: grid;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border-radius: 20%;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.trigger img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.trigger:hover {
+  background: var(--color-lavender);
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: min(92vw, 58rem);
+  max-width: none;
+  max-height: min(90dvh, 54rem);
+  margin: auto;
+  overflow: visible;
+  border: 0;
+  border-radius: 1rem;
+  padding: 0;
+  background: var(--color-chat);
+  color: #f6f3ff;
+  box-shadow: 0 24px 80px rgb(12 10 35 / 35%);
+}
+
+.dialog::backdrop {
+  background: rgb(68 67 83 / 55%);
+  backdrop-filter: blur(2px);
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  min-height: min(70dvh, 40rem);
+  max-height: 88dvh;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: inherit;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.close img {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.85rem;
+  display: grid;
+  width: 1.5rem;
+  height: 1.5rem;
+  place-items: center;
+  color: #aaa4ff;
+  /* border: 1px solid #ffffff; */
+  /* border-radius: 50%; */
+  /* background: transparent; */
+  /* color: inherit; */
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+
+.heading {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.heading img {
+  width: 2.3rem;
+  height: 2.3rem;
+  filter: invert(73%) sepia(53%) saturate(2774%) hue-rotate(209deg) brightness(104%) contrast(101%);
+}
+
+.heading h2 {
+  margin: 0;
+  color: #aaa4ff;
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.heading p,
+.notice {
+  margin: 0;
+  color: #d4d2df;
+  font-size: 0.82rem;
+}
+
+.notice {
+  max-width: 44rem;
+  margin: 1.5rem auto 0.75rem;
+  text-align: center;
+}
+
+.frame {
+  width: 100%;
+  min-height: 20rem;
+  flex: 1;
+  border: 0;
+  border-radius: 0.6rem;
+  background: #fff;
+}
+
+@media (max-width: 560px) {
+  .trigger {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .trigger img {
+    width: 1.45rem;
+    height: 1.45rem;
+  }
+
+  .dialog {
+    width: calc(100vw - 1rem);
+    max-height: 92dvh;
+  }
+
+  .panel {
+    min-height: 72dvh;
+    max-height: 92dvh;
+    padding: 1.25rem 0.9rem 0.9rem;
+  }
+}
