@@ -10,6 +10,7 @@
     "astro": "astro",
     "close": "rm -rf node_modules && rm -rf package-lock.json",
     "publish": "git add . && git commit -m 'Update' && git push",
+    "generate-maps": "tsx scripts/generate-maps.ts",
     "rag:ingest": "tsx scripts/ingest.ts",
     "rag:serve": "tsx scripts/serve.ts",
     "rag:eval": "tsx scripts/eval.ts",
@@ -29,11 +30,14 @@
     "astro-icon": "^1.1.5",
     "framer-motion": "^14.6.0",
     "marked": "^15.0.12",
-    "marked-shiki": "^1.2.0"
+    "marked-shiki": "^1.2.0",
+    "staticmaps": "^1.13.1"
   },
   "devDependencies": {
     "@types/blobshape": "^1.0.3",
     "@types/node": "^24.0.1",
-    "npmlog": "^7.0.1"
+    "@types/staticmaps": "^1.12.5",
+    "npmlog": "^7.0.1",
+    "tsx": "^4.23.15"
   }
 }

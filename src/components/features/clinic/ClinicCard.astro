@@ -1,14 +1,11 @@
 ---
-import { staticMapUrl } from "@utils/static-map-url";
-
-const { name, lat, lng, radiusKm = 1, address, phone, link } = Astro.props;
-const mapUrl = staticMapUrl(lat, lng, radiusKm);
+const { name, description, thumbnail, address, phone, link } = Astro.props;
 ---
 
 <article class="flex flex-col overflow-hidden rounded-lg border border-neutral-200 bg-white">
-    <div class="aspect-[4/3] w-full overflow-hidden">
+    <div class="aspect-4/3 w-full overflow-hidden">
     <img
-        src={mapUrl}
+        src={thumbnail}
         alt={`Map of ${name}`}
         class="h-full w-full object-cover"
         loading="lazy"
