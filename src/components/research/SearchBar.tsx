@@ -1,4 +1,4 @@
-import styles from './ResearchLibrary.module.css';
+import styles from '@styles/research_lib.module.css';
 
 export default function SearchBar({ query, setQuery }: { query: string; setQuery: (query: string) => void }) {
     return (
