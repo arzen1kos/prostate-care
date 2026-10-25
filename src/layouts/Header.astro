@@ -1,9 +1,7 @@
 ---
-import FontSizeToggle from '@components/common/FontSizeToggle.astro';
-import ThemeToggle from '@components/common/ThemeToggle.astro';
+import Accessibility from '@components/common/Accessibility.astro';
 import ChatBox from '@components/common/ChatBox.astro';
-import { mainNavItems } from '@contents/common/navigation';
-
+// import { mainNavItems } from '@contents/common/navigation';
 interface Props {
   title: string;
   showBrand?: boolean;
@@ -15,7 +13,7 @@ const brandTitle = title.split('|')[0].trim();
 ---
 
 <header class="site-header sticky top-0 mb-5 py-3 z-40 w-full">
-  <div class=`container mx-auto px-10 md:px-6 lg:px-8 max-w-[2000px] flex items-center h-20`>
+  <div class=`container mx-auto px-10 md:px-6 lg:px-2 max-w-[2000px] flex items-start h-20`>
     <!-- Logo (left) - Size from centralized file -->
     <div class="site-header__inner">
       {showBrand && (
@@ -29,80 +27,22 @@ const brandTitle = title.split('|')[0].trim();
       )}
     </div>
     <!-- Right Navigation Items -->
-    <div class={`flex items-center py-2 gap-4`}>
-        {mainNavItems.map(item => (
-          <FontSizeToggle {...item} />
-        ))}
-        <div class={`flex items-center space-x-1 sm:space-x-8`}>
-          <ThemeToggle />
+     <nav class="quick-links" aria-label="Quick links">
+      <a class="quick-link" href="/clinics" aria-label="Find a clinic" title="Clinics">
+        <!-- {linksById.get('clinics')} -->
+        <img src="/assets/svg/Clinic.svg" alt=""/>
+      </a>
+      <a class="quick-link" href="/site-map" aria-label="Open site map" title="Site map">
+        <!-- {linksById.get('site-map')} -->
+        <img src="/assets/svg/Sitemap-outline.svg" alt=""/>
+      </a>
+      <div class={`flex flex-col-reverse items-center`}>
+          <ChatBox />
         </div>
-        <ChatBox />
-      </div>
+        <Accessibility />
+    </nav>
   </div>
 </header>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const themeToggle = document.getElementById('theme-toggle');
-    
-    // Check for saved theme preference or use OS preference
-    const getThemePreference = () => {
-      if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-        return localStorage.getItem('theme');
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    };
-    
-    // Apply the current theme
-    const applyTheme = (theme: any) => {
-        const darkLogo  = '/assets/logo/prometheus-app-logo-for-dark.png';
-        const lightLogo = '/assets/logo/prometheus-app-logo.png'; // Change this to your dark logo path
-        const logo = document.getElementById('site-logo');
-        
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const lightIcon = document.getElementById('theme-toggle-light-icon');
-        const darkIcon = document.getElementById('theme-toggle-dark-icon');
-
-      if (theme === 'dark') {
-        document.documentElement.classList.add('dark');
-
-        darkIcon?.classList.add('hidden');
-        lightIcon?.classList.remove('hidden');
-        
-        if (logo instanceof HTMLImageElement) {
-          logo.src = darkLogo;
-        }
-
-      } else {
-        document.documentElement.classList.remove('dark');
-
-        darkIcon?.classList.remove('hidden');
-        lightIcon?.classList.add('hidden');
-
-        if (logo instanceof HTMLImageElement) {
-          logo.src = lightLogo;
-        }
-      }
-      
-    };
-    
-    // Initialize theme
-    const currentTheme = getThemePreference();
-    applyTheme(currentTheme);
-    
-    // Toggle theme on click
-    themeToggle?.addEventListener('click', () => {
-      const isDark = document.documentElement.classList.contains('dark');
-      const newTheme = isDark ? 'light' : 'dark';
-      
-      // Save preference
-      localStorage.setItem('theme', newTheme);
-      
-      // Apply new theme
-      applyTheme(newTheme);
-    });
-  });
-</script>
 
 <style>
   .site-header {
@@ -114,14 +54,15 @@ const brandTitle = title.split('|')[0].trim();
     background: none;
   }
 
-  .site-header__inner {
+  .site-header__inner, .quick-links {
     display: flex;
     width: min(100% - 2.5rem, 82rem);
-    min-height: 6.5rem;
+    min-height: 4.5rem;
     margin-inline: auto;
+    padding: 0 1rem;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   .site-brand {
@@ -159,10 +100,10 @@ const brandTitle = title.split('|')[0].trim();
 
   .quick-links {
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     margin-left: auto;
     justify-content: flex-end;
-    gap: clamp(0.65rem, 2.2vw, 1.75rem);
+    gap: clamp(0.65rem, 2.2vw, 0.75rem);
   }
 
   .quick-link {
@@ -185,10 +126,12 @@ const brandTitle = title.split('|')[0].trim();
   }
 
   .accessibility-container {
-    display: 'flex';
-    position: 'relative';
-    flex-direction: column;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: column-reverse;
+    position: relative;
+    align-items: center;
+    /* padding: 2rem 0; */
+    gap: 4;
   }
 
   @media (max-width: 560px) {
