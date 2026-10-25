@@ -1,0 +1,63 @@
+[
+  {
+    "id": "basics",
+    "label": "Prostate cancer basics, tests, recurrence, and support",
+    "topics": [
+      { "title": "What you need to know early", "href": "/stage-0/what-you-need-to-know-early" },
+      { "title": "Should I get screened?", "href": "/stage-0/should-i-get-screened" },
+      { "title": "How lifestyle may influence health", "href": "/stage-0/small-choices-big-impact" },
+      { "title": "Understanding your diagnosis", "href": "/stage-1/understanding-your-diagnosis" },
+      { "title": "Test and monitoring", "href": "/stage-1/understanding-your-diagnosis" },
+      { "title": "Treatment options", "href": "/stage-1/navigating-your-options" },
+      { "title": "Sexual health and well-being", "href": "/stage-2/your-body-your-needs" },
+      { "title": "Mental health and support", "href": "/stage-3/finding-your-ground" }
+    ]
+  },
+  {
+    "id": "stage-1",
+    "label": "Stage 1: Early-stage and localised options",
+    "topics": [
+      { "title": "Understanding your diagnosis", "href": "/stage-1/understanding-your-diagnosis" },
+      { "title": "Navigating your options", "href": "/stage-1/navigating-your-options" },
+      { "title": "Making every doctor's visit count", "href": "/stage-1/doctor-time-making-every-visit-count" },
+      { "title": "Community and support networks", "href": "/families-caregivers" },
+      { "title": "Health and well-being", "href": "/stage-0/small-choices-big-impact" }
+    ]
+  },
+  {
+    "id": "stage-2",
+    "label": "Stage 2: Intermediate-risk prostate cancer",
+    "topics": [
+      { "title": "Treatment paths and decisions", "href": "/stage-1/navigating-your-options" },
+      { "title": "Working with your medical team", "href": "/stage-1/doctor-time-making-every-visit-count" },
+      { "title": "What to expect during and after treatment", "href": "/stage-2/your-body-your-needs" },
+      { "title": "Emotional well-being", "href": "/stage-2/staying-grounded-through-it-all" },
+      { "title": "Managing side effects", "href": "/stage-2/body-care-that-builds-you-up" },
+      { "title": "Keeping active", "href": "/stage-2/body-care-that-builds-you-up" }
+    ]
+  },
+  {
+    "id": "stage-3",
+    "label": "Stage 3: Locally advanced prostate cancer",
+    "topics": [
+      { "title": "Understanding treatment options", "href": "/stage-3/what-to-expect-now" },
+      { "title": "Coordinating care across teams", "href": "/stage-3/what-to-expect-now" },
+      { "title": "Nutrition and hydration", "href": "/stage-3/caring-for-a-tired-body" },
+      { "title": "Sleep, pain relief, and symptom tools", "href": "/stage-3/caring-for-a-tired-body" },
+      { "title": "Finding emotional support", "href": "/stage-3/finding-your-ground" },
+      { "title": "Support groups", "href": "/families-caregivers" }
+    ]
+  },
+  {
+    "id": "stage-4",
+    "label": "Stage 4: Living well with advanced prostate cancer",
+    "topics": [
+      { "title": "Treatment and comfort decisions", "href": "/stage-4/the-care-that-fits-you" },
+      { "title": "What palliative support means", "href": "/stage-4/the-care-that-fits-you" },
+      { "title": "Being heard by your team", "href": "/stage-4/the-care-that-fits-you" },
+      { "title": "Sleep, pain relief, and symptom tools", "href": "/stage-4/support-for-the-day-to-day" },
+      { "title": "Movement and stillness", "href": "/stage-4/support-for-the-day-to-day" },
+      { "title": "Support for family and whānau", "href": "/families-caregivers" }
+    ]
+  }
+]

@@ -1,0 +1,68 @@
+{
+  "patients": {
+    "title": "Patient Support Hub",
+    "heading": "Every journey is different.\nLet’s find the information you need.",
+    "description": "Explorez trusted information about prostate cancer, treatment choices, and living well at every stage.",
+    "breadcrumbs": [
+      { "label": "Home", "href": "/welcome", "current": false },
+      { "label": "Patients", "href": "/patients", "current": true }
+    ],
+    "illustration": "/assets/thumbnails/hero-patient-path.png",
+    "sections": [
+      {
+        "heading": "Understand your diagnosis",
+        "cards": [
+          { "title": "Early information and testing", "description": "Learn about PSA testing, screening, and what to ask when you are waiting for results.", "href": "/stage-0/what-you-need-to-know-early" },
+          { "title": "Understanding your diagnosis", "description": "Explore information to help you understand a diagnosis and prepare for conversations with your care team.", "href": "/stage-1/understanding-your-diagnosis" },
+          { "title": "Make every appointment count", "description": "Ideas for preparing questions and making the most of a visit with your doctor.", "href": "/stage-1/doctor-time-making-every-visit-count" }
+        ]
+      },
+      {
+        "heading": "Treatment, health, and well-being",
+        "cards": [
+          { "title": "Navigating your options", "description": "Explore information to support discussions about treatment options with your healthcare team.", "href": "/stage-1/navigating-your-options" },
+          { "title": "Movement and exercise", "description": "Find practical information about activity and caring for your body during treatment.", "href": "/stage-2/body-care-that-builds-you-up" },
+          { "title": "Nutrition and everyday choices", "description": "Read about food, lifestyle, and well-being in the context of prostate cancer.", "href": "/stage-0/small-choices-big-impact" }
+        ]
+      }
+    ]
+  },
+  "families": {
+    "title": "Whānau and Friends Support Hub",
+    "heading": "Support someone you care about, while looking after yourself too.",
+    "description": "Guidance for partners, whānau, friends, and caregivers navigating appointments, treatment, and day-to-day life together.",
+    "breadcrumbs": [
+      { "label": "Home", "href": "/", "current": false },
+      { "label": "Families and caregivers", "href": "/families-caregivers", "current": true }
+    ],
+    "illustration": "/assets/thumbnails/hero-family-path.png",
+    "sections": [
+      {
+        "heading": "Information and support for whānau",
+        "cards": [
+          { "title": "The basics you need", "description": "Start with information for understanding and supporting someone through prostate cancer.", "href": "/caregiver/the-basics-you-need" },
+          { "title": "Real support for real people", "description": "Explore practical support and ways to navigate care together.", "href": "/caregiver/real-support-for-real-people" },
+          { "title": "You are part of this, but you are still you", "description": "Find space for your own well-being while supporting someone you care about.", "href": "/caregiver/youre-part-of-this-but-youre-still-you" }
+        ]
+      },
+      {
+        "heading": "Care and community",
+        "cards": [
+          { "title": "Clinics and support groups", "description": "Find local care and community connections across Aotearoa New Zealand.", "href": "/clinics" },
+          { "title": "Patient outcomes and reports", "description": "Explore available summaries and information about prostate cancer care.", "href": "/research-hub" }
+        ]
+      }
+    ]
+  },
+  "research": {
+    "title": "Research Knowledge Hub",
+    "heading": "Explore prostate cancer research.",
+    "description": "A starting point for researchers, clinicians, and students looking for research topics and source material.",
+    "breadcrumbs": [
+      { "label": "Home", "href": "/welcome", "current": false },
+      { "label": "Research Hub", "href": "/research-hub", "current": true }
+    ],
+    "illustration": "/assets/thumbnails/hero-researcher-path.png",
+    "sections": []
+  }
+}

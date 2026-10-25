@@ -1,0 +1,16 @@
+[
+  { "id": "clinical-trials", "label": "Clinical trials" },
+  { "id": "pharmacology", "label": "Pharmacology and systemic therapies" },
+  { "id": "radiotherapy", "label": "Radiotherapy and SBRT" },
+  { "id": "nutrition-epidemiology", "label": "Nutrition and epidemiology" },
+  { "id": "biomarkers-immunology", "label": "Immunology and biomarkers" },
+  { "id": "exercise-rehabilitation", "label": "Exercise and rehabilitation" },
+  { "id": "diagnosis-testing", "label": "Diagnosis and testing" },
+  { "id": "patient-treatment", "label": "Patient treatment guides" },
+  { "id": "patient-lifestyle", "label": "Patient lifestyle" },
+  { "id": "caregiver-support", "label": "Caregiver and family support" },
+  { "id": "registry-outcomes", "label": "Registry data and outcomes" },
+  { "id": "medicine-import", "label": "Medicine import guidance" },
+  { "id": "general-medical", "label": "General medical reference" },
+  { "id": "needs-review", "label": "Needs topic review" }
+]
