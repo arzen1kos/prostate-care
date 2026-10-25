@@ -1,8 +1,7 @@
 ---
 import Layout from '@layouts/Layout.astro';
-import ClinicCard from '@components/features/clinic/ClinicCard'
+import ClinicCard from '@components/features/clinic/ClinicCard.astro'
 import { clinic, community} from "@contents/clinics/clinics.json";
-// import { staticMapUrl } from "@/utils/static-map-url";   
 
 const clinics = clinic
 const communities = community
@@ -30,15 +29,12 @@ const description: string = "Find prostate cancer clinics and community support 
       <div class="mt-6 grid gap-6 md:grid-cols-3">
         {clinics.map((clinic: any) => (
         <ClinicCard
-          key={clinic.id}
           name={clinic.name}
           description={clinic.description}
+          thumbnail={clinic.thumbnail}
           address={clinic.address}
           phone={clinic.phone}
           link={clinic.link}
-          lat={clinic.lat}
-          lng={clinic.lng}
-          radiusKm={clinic.radiusKm}
         />   
       ))}
       </div>

@@ -34,6 +34,7 @@
     "staticmaps": "^1.13.1"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/blobshape": "^1.0.3",
     "@types/node": "^24.0.1",
     "@types/staticmaps": "^1.12.5",
