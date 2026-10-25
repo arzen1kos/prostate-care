@@ -5,53 +5,170 @@ import Canvas from '@components/Canvas.tsx'
 // src/pages/sitemap.astro (or wherever you want the canvas to live)
 import CanvasNav from '@components/CanvasNav.astro';
  
-// edges are DIRECTED [parentId, childId] — this drives both the lines
-// AND which nodes collapse together when you right-click a parent.
+// Decision tree → nodes & edges. Edges are DIRECTED [parentId, childId].
+// Shape: question → option → (next question | articles). Question-level articles hang off the question.
+// Left-click a node to show its descendant articles and reveal only its direct children.
+// Right-click a question/option to collapse everything beneath it.
+// Article node URLs point to generated Astro routes by default and can be overridden per node.
 const nodes = [
-  { id: 'home',    title: 'Home',            excerpt: 'Landing page, entry point', url: '/',           x: 1000, y: 120, type: 'core' },
-  { id: 'about',   title: 'About',           excerpt: 'Who this is for',           url: '/about',      x: 660,  y: 320, type: 'core' },
-  { id: 'work',    title: 'Work / Services', excerpt: 'What is offered',           url: '/work',       x: 1340, y: 320, type: 'core' },
-  { id: 'case1',   title: 'Case study',      excerpt: 'Project deep-dive',         url: '/work/case1', x: 1200, y: 520, type: 'content' },
-  { id: 'case2',   title: 'Case study',      excerpt: 'Second deep-dive',          url: '/work/case2', x: 1480, y: 520, type: 'content' },
-  { id: 'blog',    title: 'Blog',            excerpt: 'Articles and updates',      url: '/blog',       x: 660,  y: 560, type: 'content' },
-  { id: 'post1',   title: 'Latest post',     excerpt: 'Most recent article',       url: '/blog/1',     x: 500,  y: 760, type: 'content' },
-  { id: 'post2',   title: 'Featured post',   excerpt: 'Pinned article',            url: '/blog/2',     x: 800,  y: 760, type: 'content' },
-  { id: 'contact', title: 'Contact',         excerpt: 'Get in touch',              url: '/contact',    x: 1000, y: 780, type: 'core' },
+  { id: 'start', title: 'Which best describes you?', excerpt: 'Single choice', url: '', x: 4635, y: 120, type: 'question' },
+  { id: 'start__patient', title: 'I have prostate cancer', excerpt: 'Answer option', url: '', x: 2359, y: 320, type: 'option' },
+  { id: 'start__family', title: 'Someone close to me does', excerpt: 'Answer option', url: '', x: 5003, y: 320, type: 'option' },
+  { id: 'start__researcher', title: 'I\'m researching it', excerpt: 'Answer option', url: '', x: 6543, y: 320, type: 'option' },
+  { id: 'p_stage', title: 'What stage are you at?', excerpt: 'Single choice', url: '', x: 2359, y: 520, type: 'question' },
+  { id: 'f_situation', title: 'Where are they in the journey?', excerpt: 'Single choice', url: '', x: 5003, y: 520, type: 'question' },
+  { id: 'r_focus', title: 'Which topics matter to you?', excerpt: 'Multi choice', url: '', x: 6543, y: 520, type: 'question' },
+  { id: 'p_stage__unsure', title: 'Not sure / awaiting diagnosis', excerpt: 'Answer option', url: '', x: 530, y: 720, type: 'option' },
+  { id: 'p_stage__stage0_1', title: 'Stage 0–1 (very early, low risk)', excerpt: 'Answer option', url: '', x: 1300, y: 720, type: 'option' },
+  { id: 'p_stage__stage2', title: 'Stage 2', excerpt: 'Answer option', url: '', x: 1960, y: 720, type: 'option' },
+  { id: 'p_stage__stage3', title: 'Stage 3 (locally advanced)', excerpt: 'Answer option', url: '', x: 2620, y: 720, type: 'option' },
+  { id: 'p_stage__stage4', title: 'Stage 4 (spread beyond prostate)', excerpt: 'Answer option', url: '', x: 3582, y: 720, type: 'option' },
+  { id: 'patient_stages_how_staging_works', title: 'How staging works', excerpt: 'Patient · stages', url: '/articles/patient_stages_how_staging_works', x: 4160, y: 720, type: 'article' },
+  { id: 'f_situation__newly_diagnosed', title: 'Just diagnosed', excerpt: 'Answer option', url: '', x: 4490, y: 720, type: 'option' },
+  { id: 'f_situation__in_treatment', title: 'In treatment', excerpt: 'Answer option', url: '', x: 4930, y: 720, type: 'option' },
+  { id: 'f_situation__advanced', title: 'Advanced or palliative', excerpt: 'Answer option', url: '', x: 5590, y: 720, type: 'option' },
+  { id: 'r_focus__trials', title: 'Clinical trials', excerpt: 'Answer option', url: '', x: 6250, y: 720, type: 'option' },
+  { id: 'r_focus__biomarkers', title: 'Biomarkers & imaging', excerpt: 'Answer option', url: '', x: 6580, y: 720, type: 'option' },
+  { id: 'r_focus__epidemiology', title: 'Epidemiology & screening', excerpt: 'Answer option', url: '', x: 6800, y: 720, type: 'option' },
+  { id: 'p_unsure', title: 'Have you had a biopsy yet?', excerpt: 'Yes no', url: '', x: 530, y: 920, type: 'question' },
+  { id: 'p_s1', title: 'What do you want to explore?', excerpt: 'Multi choice', url: '', x: 1300, y: 920, type: 'question' },
+  { id: 'p_s2', title: 'What do you want to explore?', excerpt: 'Multi choice', url: '', x: 1960, y: 920, type: 'question' },
+  { id: 'p_s3', title: 'What do you want to explore?', excerpt: 'Multi choice', url: '', x: 2620, y: 920, type: 'question' },
+  { id: 'p_s4', title: 'What do you want to explore?', excerpt: 'Multi choice', url: '', x: 3582, y: 920, type: 'question' },
+  { id: 'family_diagnosis_how_to_start_the_conversation', title: 'How to start the conversation', excerpt: 'Family · diagnosis', url: '/articles/family_diagnosis_how_to_start_the_conversation', x: 4380, y: 920, type: 'article' },
+  { id: 'family_diagnosis_questions_to_ask_the_doctor', title: 'Questions to ask the doctor', excerpt: 'Family · diagnosis', url: '/articles/family_diagnosis_questions_to_ask_the_doctor', x: 4600, y: 920, type: 'article' },
+  { id: 'family_treatment_supporting_a_partner', title: 'Supporting a partner', excerpt: 'Family · treatment', url: '/articles/family_treatment_supporting_a_partner', x: 4820, y: 920, type: 'article' },
+  { id: 'support_emotional_for_carers', title: 'For carers', excerpt: 'Support · emotional', url: '/articles/support_emotional_for_carers', x: 5040, y: 920, type: 'article' },
+  { id: 'f_caregiver', title: 'Are you their main caregiver?', excerpt: 'Yes no', url: '', x: 5590, y: 920, type: 'question' },
+  { id: 'researcher_trials_active_and_recruiting', title: 'Active and recruiting', excerpt: 'Researcher · trials', url: '/articles/researcher_trials_active_and_recruiting', x: 6140, y: 920, type: 'article' },
+  { id: 'researcher_trials_enrolling_participants', title: 'Enrolling participants', excerpt: 'Researcher · trials', url: '/articles/researcher_trials_enrolling_participants', x: 6360, y: 920, type: 'article' },
+  { id: 'researcher_biomarkers_psa_and_psma_pet', title: 'Psa and psma pet', excerpt: 'Researcher · biomarkers', url: '/articles/researcher_biomarkers_psa_and_psma_pet', x: 6580, y: 920, type: 'article' },
+  { id: 'researcher_epidemiology_incidence_and_survival', title: 'Incidence and survival', excerpt: 'Researcher · epidemiology', url: '/articles/researcher_epidemiology_incidence_and_survival', x: 6800, y: 920, type: 'article' },
+  { id: 'p_unsure__yes', title: 'Yes', excerpt: 'Answer option', url: '', x: 310, y: 1120, type: 'option' },
+  { id: 'p_unsure__no', title: 'No', excerpt: 'Answer option', url: '', x: 750, y: 1120, type: 'option' },
+  { id: 'p_s1__surveillance', title: 'Active surveillance', excerpt: 'Answer option', url: '', x: 1080, y: 1120, type: 'option' },
+  { id: 'p_s1__treatment', title: 'Surgery or radiation', excerpt: 'Answer option', url: '', x: 1300, y: 1120, type: 'option' },
+  { id: 'p_s1__side_effects', title: 'Side effects & recovery', excerpt: 'Answer option', url: '', x: 1520, y: 1120, type: 'option' },
+  { id: 'p_s2__treatment', title: 'Treatment options', excerpt: 'Answer option', url: '', x: 1740, y: 1120, type: 'option' },
+  { id: 'p_s2__second_opinion', title: 'Getting a second opinion', excerpt: 'Answer option', url: '', x: 1960, y: 1120, type: 'option' },
+  { id: 'p_s2__side_effects', title: 'Side effects & recovery', excerpt: 'Answer option', url: '', x: 2180, y: 1120, type: 'option' },
+  { id: 'p_s3__combined', title: 'Combined radiation + hormone therapy', excerpt: 'Answer option', url: '', x: 2400, y: 1120, type: 'option' },
+  { id: 'p_s3__surgery', title: 'Surgery', excerpt: 'Answer option', url: '', x: 2620, y: 1120, type: 'option' },
+  { id: 'p_s3__monitoring', title: 'Follow-up & PSA monitoring', excerpt: 'Answer option', url: '', x: 2840, y: 1120, type: 'option' },
+  { id: 'p_s4__systemic', title: 'Hormone & systemic therapy', excerpt: 'Answer option', url: '', x: 3170, y: 1120, type: 'option' },
+  { id: 'p_s4__bone', title: 'Bone health & pain', excerpt: 'Answer option', url: '', x: 3500, y: 1120, type: 'option' },
+  { id: 'p_s4__trials', title: 'Clinical trials', excerpt: 'Answer option', url: '', x: 3720, y: 1120, type: 'option' },
+  { id: 'support_emotional_living_with_advanced_cancer', title: 'Living with advanced cancer', excerpt: 'Support · emotional', url: '/articles/support_emotional_living_with_advanced_cancer', x: 3940, y: 1120, type: 'article' },
+  { id: 'f_caregiver__yes', title: 'Yes', excerpt: 'Answer option', url: '', x: 5370, y: 1120, type: 'option' },
+  { id: 'f_caregiver__no', title: 'No', excerpt: 'Answer option', url: '', x: 5810, y: 1120, type: 'option' },
+  { id: 'patient_diagnosis_reading_biopsy_results', title: 'Reading biopsy results', excerpt: 'Patient · diagnosis', url: '/articles/patient_diagnosis_reading_biopsy_results', x: 200, y: 1320, type: 'article' },
+  { id: 'patient_diagnosis_gleason_and_psa_explained', title: 'Gleason and psa explained', excerpt: 'Patient · diagnosis', url: '/articles/patient_diagnosis_gleason_and_psa_explained', x: 420, y: 1320, type: 'article' },
+  { id: 'patient_prediagnosis_psa_testing_basics', title: 'Psa testing basics', excerpt: 'Patient · prediagnosis', url: '/articles/patient_prediagnosis_psa_testing_basics', x: 640, y: 1320, type: 'article' },
+  { id: 'patient_prediagnosis_questions_for_your_gp', title: 'Questions for your gp', excerpt: 'Patient · prediagnosis', url: '/articles/patient_prediagnosis_questions_for_your_gp', x: 860, y: 1320, type: 'article' },
+  { id: 'patient_stage1_active_surveillance_guide', title: 'Active surveillance guide', excerpt: 'Patient · stage 1', url: '/articles/patient_stage1_active_surveillance_guide', x: 1080, y: 1320, type: 'article' },
+  { id: 'patient_stage1_surgery_vs_radiation', title: 'Surgery vs radiation', excerpt: 'Patient · stage 1', url: '/articles/patient_stage1_surgery_vs_radiation', x: 1300, y: 1320, type: 'article' },
+  { id: 'patient_stage1_continence_and_erections', title: 'Continence and erections', excerpt: 'Patient · stage 1', url: '/articles/patient_stage1_continence_and_erections', x: 1520, y: 1320, type: 'article' },
+  { id: 'patient_stage2_treatment_options_compared', title: 'Treatment options compared', excerpt: 'Patient · stage 2', url: '/articles/patient_stage2_treatment_options_compared', x: 1740, y: 1320, type: 'article' },
+  { id: 'patient_stage2_second_opinion_checklist', title: 'Second opinion checklist', excerpt: 'Patient · stage 2', url: '/articles/patient_stage2_second_opinion_checklist', x: 1960, y: 1320, type: 'article' },
+  { id: 'patient_stage2_recovery_timeline', title: 'Recovery timeline', excerpt: 'Patient · stage 2', url: '/articles/patient_stage2_recovery_timeline', x: 2180, y: 1320, type: 'article' },
+  { id: 'patient_stage3_radiation_with_hormones', title: 'Radiation with hormones', excerpt: 'Patient · stage 3', url: '/articles/patient_stage3_radiation_with_hormones', x: 2400, y: 1320, type: 'article' },
+  { id: 'patient_stage3_surgery_when_it_applies', title: 'Surgery when it applies', excerpt: 'Patient · stage 3', url: '/articles/patient_stage3_surgery_when_it_applies', x: 2620, y: 1320, type: 'article' },
+  { id: 'patient_stage3_psa_follow_up_schedule', title: 'Psa follow up schedule', excerpt: 'Patient · stage 3', url: '/articles/patient_stage3_psa_follow_up_schedule', x: 2840, y: 1320, type: 'article' },
+  { id: 'patient_stage4_hormone_therapy_explained', title: 'Hormone therapy explained', excerpt: 'Patient · stage 4', url: '/articles/patient_stage4_hormone_therapy_explained', x: 3060, y: 1320, type: 'article' },
+  { id: 'patient_stage4_chemo_and_newer_drugs', title: 'Chemo and newer drugs', excerpt: 'Patient · stage 4', url: '/articles/patient_stage4_chemo_and_newer_drugs', x: 3280, y: 1320, type: 'article' },
+  { id: 'patient_stage4_bone_metastases_care', title: 'Bone metastases care', excerpt: 'Patient · stage 4', url: '/articles/patient_stage4_bone_metastases_care', x: 3500, y: 1320, type: 'article' },
+  { id: 'patient_stage4_finding_clinical_trials', title: 'Finding clinical trials', excerpt: 'Patient · stage 4', url: '/articles/patient_stage4_finding_clinical_trials', x: 3720, y: 1320, type: 'article' },
+  { id: 'family_advanced_preventing_caregiver_burnout', title: 'Preventing caregiver burnout', excerpt: 'Family · advanced', url: '/articles/family_advanced_preventing_caregiver_burnout', x: 5260, y: 1320, type: 'article' },
+  { id: 'support_practical_palliative_care_services', title: 'Palliative care services', excerpt: 'Support · practical', url: '/articles/support_practical_palliative_care_services', x: 5480, y: 1320, type: 'article' },
+  { id: 'family_advanced_staying_connected', title: 'Staying connected', excerpt: 'Family · advanced', url: '/articles/family_advanced_staying_connected', x: 5700, y: 1320, type: 'article' },
+  { id: 'support_emotional_coping_with_grief', title: 'Coping with grief', excerpt: 'Support · emotional', url: '/articles/support_emotional_coping_with_grief', x: 5920, y: 1320, type: 'article' },
 ];
- 
+
 const edges: [string, string][] = [
-  ['home', 'about'],
-  ['home', 'work'],
-  ['home', 'contact'],
-  ['work', 'case1'],   // right-click "Work / Services" to collapse these two
-  ['work', 'case2'],
-  ['about', 'blog'],
-  ['blog', 'post1'],   // right-click "Blog" to collapse these two
-  ['blog', 'post2'],
+  ['start', 'start__patient'],
+  ['start__patient', 'p_stage'],
+  ['p_stage', 'p_stage__unsure'],
+  ['p_stage__unsure', 'p_unsure'],
+  ['p_unsure', 'p_unsure__yes'],
+  ['p_unsure__yes', 'patient_diagnosis_reading_biopsy_results'],
+  ['p_unsure__yes', 'patient_diagnosis_gleason_and_psa_explained'],
+  ['p_unsure', 'p_unsure__no'],
+  ['p_unsure__no', 'patient_prediagnosis_psa_testing_basics'],
+  ['p_unsure__no', 'patient_prediagnosis_questions_for_your_gp'],
+  ['p_stage', 'p_stage__stage0_1'],
+  ['p_stage__stage0_1', 'p_s1'],
+  ['p_s1', 'p_s1__surveillance'],
+  ['p_s1__surveillance', 'patient_stage1_active_surveillance_guide'],
+  ['p_s1', 'p_s1__treatment'],
+  ['p_s1__treatment', 'patient_stage1_surgery_vs_radiation'],
+  ['p_s1', 'p_s1__side_effects'],
+  ['p_s1__side_effects', 'patient_stage1_continence_and_erections'],
+  ['p_stage', 'p_stage__stage2'],
+  ['p_stage__stage2', 'p_s2'],
+  ['p_s2', 'p_s2__treatment'],
+  ['p_s2__treatment', 'patient_stage2_treatment_options_compared'],
+  ['p_s2', 'p_s2__second_opinion'],
+  ['p_s2__second_opinion', 'patient_stage2_second_opinion_checklist'],
+  ['p_s2', 'p_s2__side_effects'],
+  ['p_s2__side_effects', 'patient_stage2_recovery_timeline'],
+  ['p_stage', 'p_stage__stage3'],
+  ['p_stage__stage3', 'p_s3'],
+  ['p_s3', 'p_s3__combined'],
+  ['p_s3__combined', 'patient_stage3_radiation_with_hormones'],
+  ['p_s3', 'p_s3__surgery'],
+  ['p_s3__surgery', 'patient_stage3_surgery_when_it_applies'],
+  ['p_s3', 'p_s3__monitoring'],
+  ['p_s3__monitoring', 'patient_stage3_psa_follow_up_schedule'],
+  ['p_stage', 'p_stage__stage4'],
+  ['p_stage__stage4', 'p_s4'],
+  ['p_s4', 'p_s4__systemic'],
+  ['p_s4__systemic', 'patient_stage4_hormone_therapy_explained'],
+  ['p_s4__systemic', 'patient_stage4_chemo_and_newer_drugs'],
+  ['p_s4', 'p_s4__bone'],
+  ['p_s4__bone', 'patient_stage4_bone_metastases_care'],
+  ['p_s4', 'p_s4__trials'],
+  ['p_s4__trials', 'patient_stage4_finding_clinical_trials'],
+  ['p_s4', 'support_emotional_living_with_advanced_cancer'],
+  ['p_stage', 'patient_stages_how_staging_works'],
+  ['start', 'start__family'],
+  ['start__family', 'f_situation'],
+  ['f_situation', 'f_situation__newly_diagnosed'],
+  ['f_situation__newly_diagnosed', 'family_diagnosis_how_to_start_the_conversation'],
+  ['f_situation__newly_diagnosed', 'family_diagnosis_questions_to_ask_the_doctor'],
+  ['f_situation', 'f_situation__in_treatment'],
+  ['f_situation__in_treatment', 'family_treatment_supporting_a_partner'],
+  ['f_situation__in_treatment', 'support_emotional_for_carers'],
+  ['f_situation', 'f_situation__advanced'],
+  ['f_situation__advanced', 'f_caregiver'],
+  ['f_caregiver', 'f_caregiver__yes'],
+  ['f_caregiver__yes', 'family_advanced_preventing_caregiver_burnout'],
+  ['f_caregiver__yes', 'support_practical_palliative_care_services'],
+  ['f_caregiver', 'f_caregiver__no'],
+  ['f_caregiver__no', 'family_advanced_staying_connected'],
+  ['f_caregiver__no', 'support_emotional_coping_with_grief'],
+  ['start', 'start__researcher'],
+  ['start__researcher', 'r_focus'],
+  ['r_focus', 'r_focus__trials'],
+  ['r_focus__trials', 'researcher_trials_active_and_recruiting'],
+  ['r_focus__trials', 'researcher_trials_enrolling_participants'],
+  ['r_focus', 'r_focus__biomarkers'],
+  ['r_focus__biomarkers', 'researcher_biomarkers_psa_and_psma_pet'],
+  ['r_focus', 'r_focus__epidemiology'],
+  ['r_focus__epidemiology', 'researcher_epidemiology_incidence_and_survival'],
 ];
 
-// Optional: give real titles/urls for article codes instead of the
-// auto-humanized fallback (code -> "Patient Stage0" / "What It Means").
-// Anything not listed here still works — it just falls back to
-// `articleBaseUrl + code` as the link and a humanized title.
+// Update article node titles, excerpts, and URLs here to customize cards and destinations.
 //
-// const articleIndex = {
-//   patient_stage0_what_it_means: {
-//     title: 'What does Stage 0 mean?',
-//     url: '/articles/patient/stage-0/what-it-means',
-//   },
-// };
-
 const title: string = "Site Map"
 
 ---
 
 <Layout
-  title=`${title}| Prostate Cancer Foundation NZ`
+  title=`${title}`
   description=`X`
 >
     <div class="pt-2 md:px-6">
     <!-- <Canvas client:only="react"/> -->
-     <CanvasNav nodes={nodes} edges={edges} currentPath={Astro.url.pathname} height="100vh" />
+     <CanvasNav nodes={nodes} edges={edges} currentPath={Astro.url.pathname} />
     </div>
 </Layout>

@@ -2,7 +2,7 @@
 // CanvasNav.astro
 // An Obsidian-style pan/zoom canvas for site navigation.
 //
-// - Left-click a node -> navigate to its url.
+// - Left-click a node -> show its articles and reveal its immediate children.
 // - Right-click a node -> expand/collapse its children (if it has any).
 // - Below the tablet breakpoint (max-width: 767px) the canvas is disabled
 //   entirely and a simple stacked link list is shown instead.
@@ -31,7 +31,7 @@ interface CanvasNode {
   url: string;
   x: number;
   y: number;
-  type: 'core' | 'content' | 'utility';
+  type: 'core' | 'content' | 'utility' | 'question' | 'option' | 'article';
 }
 
 interface Props {
@@ -41,7 +41,7 @@ interface Props {
   height?: string; // CSS height, defaults to 100vh
 }
 
-const { nodes, edges, currentPath = '', height = '100vh' } = Astro.props;
+const { nodes, edges, currentPath = '', height = '80vh' } = Astro.props;
 
 // Mark whichever node matches the current route.
 const nodesWithHere = nodes.map((n) => ({
@@ -57,13 +57,6 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
 <div class="canvas-nav-root" style={`height: ${height};`}>
   <!-- Desktop / tablet: interactive canvas -->
   <div class="desktop-canvas">
-    <div id="legend">
-      <div class="row"><span class="dot core"></span> core page</div>
-      <div class="row"><span class="dot content"></span> content page</div>
-      <div class="row"><span class="dot utility"></span> utility page</div>
-      <div class="hint">drag background to pan · scroll to zoom · left-click to open · right-click to expand/collapse</div>
-    </div>
-
     <div id="canvas-wrap">
       <div id="canvas-inner">
         <svg id="edges"></svg>
@@ -74,6 +67,9 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
               id={`node-${n.id}`}
               data-id={n.id}
               data-url={n.url}
+              role="button"
+              tabindex="0"
+              aria-expanded="false"
               style={`left:${n.x}px; top:${n.y}px;`}
             >
               <div class="eyebrow">{n.type}</div>
@@ -85,13 +81,107 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
         }
       </div>
     </div>
-
-    <div id="controls">
-      <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
-      <span id="zoom-label">100%</span>
-      <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
-      <button id="zoom-reset" type="button" aria-label="Reset view">⟲</button>
+    <div class="left__panel">
+      <div id="legend">
+        <table class="hint">
+          <tr>
+            <th class="legend__left"></th>
+            <th class="legend__right"></th>
+          </tr>
+          <tr>
+            <td class="legend__left">
+              <svg xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24">
+                <path 
+                  d="M12 16.5a.75.75 0 0 1 .744.648l.007.102v2.188l.72-.718a.75.75 0 0 1 .976-.073l.084.073a.75.75 0 0 1 .072.976l-.072.084l-2 2l-.038.036l-.072.055l-.095.055l-.087.035l-.102.026l-.085.011h-.103l-.12-.018l-.068-.02l-.059-.022l-.07-.035l-.052-.032l-.031-.022a1 1 0 0 1-.079-.069l-2-2a.75.75 0 0 1 .977-1.133l.084.073l.72.719v-2.19a.75.75 0 0 1 .648-.742zM12 9a3 3 0 1 1 0 6a3 3 0 0 1 0-6m6.72.47a.75.75 0 0 1 .977-.073l.084.072l2 2l.036.039l.055.072l.055.095l.035.086l.026.103l.01.084v.103l-.017.12l-.02.068l-.022.059l-.035.07l-.032.052l-.028.038l-.063.072l-2 2a.75.75 0 0 1-1.133-.976l.072-.085l.719-.72H17.25a.75.75 0 0 1-.744-.647L16.501 12a.75.75 0 0 1 .648-.743l.102-.007h2.189l-.72-.72a.75.75 0 0 1-.072-.976zm-14.5 0a.75.75 0 0 1 1.134.976l-.073.084l-.72.72h2.19a.75.75 0 0 1 .743.648L7.5 12a.75.75 0 0 1-.649.743l-.101.007H4.56l.72.72a.75.75 0 0 1 .073.976l-.073.084a.75.75 0 0 1-.977.073l-.084-.073l-2-2l-.09-.11l-.055-.095l-.036-.086l-.026-.103l-.011-.09v-.093l.018-.125l.02-.067l.022-.06l.035-.07l.032-.052l.023-.03a1 1 0 0 1 .068-.08zM12 10.5a1.5 1.5 0 1 0 0 3a1.5 1.5 0 0 0 0-3m-.136-8.488l.067-.009l.087-.003l.06.004l.094.016l.068.019l.059.022l.07.036l.052.032l.038.027l.072.063l2 2a.75.75 0 0 1-.977 1.134l-.084-.073l-.72-.72v2.19a.75.75 0 0 1-.648.743l-.101.007a.75.75 0 0 1-.744-.648l-.006-.102V4.56l-.72.72a.75.75 0 0 1-.977.073L9.47 5.28a.75.75 0 0 1-.072-.976l.072-.085l2-2l.11-.09l.095-.055l.087-.035z"
+                />
+              </svg>
+            </td>
+            <td class="legend__right">drag background to pan</td>
+          </tr>
+          <tr>
+            <td class="legend__left">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 256 256"
+              >
+              <path 
+                fill="#212121"
+                stroke="#212121" 
+                stroke-width="1.5px"
+                d="M144 16h-32a64.07 64.07 0 0 0-64 64v96a64.07 64.07 0 0 0 64 64h32a64.07 64.07 0 0 0 64-64V80a64.07 64.07 0 0 0-64-64m48 160a48.05 48.05 0 0 1-48 48h-32a48.05 48.05 0 0 1-48-48V80a48.05 48.05 0 0 1 48-48h32a48.05 48.05 0 0 1 48 48Zm-56-92.69v89.38l10.34-10.35a8 8 0 0 1 11.32 11.32l-24 24a8 8 0 0 1-11.32 0l-24-24a8 8 0 0 1 11.32-11.32L120 172.69V83.31l-10.34 10.35a8 8 0 0 1-11.32-11.32l24-24a8 8 0 0 1 11.32 0l24 24a8 8 0 0 1-11.32 11.32Z"
+              />
+            </svg>
+            </td>
+            <td class="legend__right">scroll to zoom</td>
+          </tr>
+          <tr>
+            <td class="legend__left">
+              <svg xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 14 14">
+                <g 
+                  fill="none" 
+                  stroke="#212121" 
+                  stroke-width="1px"
+                  stroke-linecap="round" 
+                  stroke-linejoin="round">
+                  <path 
+                    d="M2.023 5.317C2.023 2.915 4.18.706 6.634.706m-2.065 9.71c.103 1.436 1.215 2.677 2.647 2.823c.333.034.67.055 1.01.055s.677-.021 1.01-.055c1.432-.146 2.544-1.387 2.647-2.823c.054-.736.094-1.487.094-2.251s-.04-1.516-.094-2.252c-.103-1.435-1.215-2.676-2.647-2.822a10 10 0 0 0-1.01-.056c-.34 0-.677.022-1.01.056c-1.432.146-2.544 1.387-2.647 2.822a31 31 0 0 0-.094 2.252c0 .764.04 1.515.094 2.251"/><path d="M8.225 3.035v3.56a1 1 0 0 1-1.002 1a344 344 0 0 0-2.748.003"
+                  />
+                </g>
+              </svg>
+            </td>
+            <td class="legend__right">left-click for articles and next step</td>
+          </tr>
+          <tr>
+            <td class="legend__left">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 14 14">
+              <g
+                transform="translate(15,0) scale(-1,1)"
+                fill="none"
+                stroke="#212121"
+                stroke-width="1px"
+                stroke-linecap="round"
+                stroke-linejoin="round">
+                
+                <path d="M2.023 5.317C2.023 2.915 4.18.706 6.634.706m-2.065 9.71c.103 1.436 1.215 2.677 2.647 2.823c.333.034.67.055 1.01.055s.677-.021 1.01-.055c1.432-.146 2.544-1.387 2.647-2.823c.054-.736.094-1.487.094-2.251s-.04-1.516-.094-2.252c-.103-1.435-1.215-2.676-2.647-2.822a10 10 0 0 0-1.01-.056c-.34 0-.677.022-1.01.056c-1.432.146-2.544 1.387-2.647 2.822a31 31 0 0 0-.094 2.252c0 .764.04 1.515.094 2.251"/>
+                
+                <path d="M8.225 3.035v3.56a1 1 0 0 1-1.002 1a344 344 0 0 0-2.748.003"/>
+              
+              </g>
+            </svg>
+            </td>
+            <td class="legend__right">right-click to expand/collapse</td>
+          </tr>
+        </table>
+      </div>
+      <div id="controls">
+        <button id="zoom-out" type="button" aria-label="Zoom out">−</button>
+        <span id="zoom-label">100%</span>
+        <button id="zoom-in" type="button" aria-label="Zoom in">+</button>
+        <button id="zoom-reset" type="button" aria-label="Reset view">⟲</button>
+      </div>
     </div>
+          <div class="article-panel" aria-label="Related articles" aria-hidden="true">
+        <div class="article-panel__header">
+          <div>
+            <p class="article-panel__eyebrow">Explore this topic</p>
+            <h2 class="article-panel__title"></h2>
+          </div>
+          <button class="article-panel__close" type="button" aria-label="Close articles panel">×</button>
+        </div>
+        <p class="article-panel__count"></p>
+        <div class="article-panel__list"></div>
+      </div>
   </div>
 
   <!-- Mobile: plain link list, canvas is disabled entirely -->
@@ -123,6 +213,11 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
   const inner = root.querySelector('#canvas-inner');
   const svg = root.querySelector('#edges');
   const zoomLabel = root.querySelector('#zoom-label');
+  const articlePanel = root.querySelector('.article-panel');
+  const articlePanelTitle = root.querySelector('.article-panel__title');
+  const articlePanelCount = root.querySelector('.article-panel__count');
+  const articlePanelList = root.querySelector('.article-panel__list');
+  const nodeById = new Map(nodes.map((node) => [node.id, node]));
 
   // live positions, since nodes can be dragged
   const state = nodes.map((n) => ({ ...n }));
@@ -135,6 +230,112 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     if (!(b in parentOf)) parentOf[b] = a;
   });
   const collapsed = new Set(); // ids currently collapsed
+  const rootNode = state.find((node) => node.id === 'start' || !(node.id in parentOf)) || state[0];
+  let activeNodeId = rootNode?.id;
+  let contextExpandedId = null;
+
+  function descendantsOf(id) {
+    const descendants = [];
+    const visit = (parentId) => {
+      (childrenOf[parentId] || []).forEach((childId) => {
+        descendants.push(childId);
+        visit(childId);
+      });
+    };
+    visit(id);
+    return descendants;
+  }
+
+  function showArticlesFor(id) {
+    const selectedNode = nodeById.get(id);
+    const articles = [selectedNode, ...descendantsOf(id).map((nodeId) => nodeById.get(nodeId))]
+      .filter((node) => node && node.type === 'article' && node.url);
+
+    articlePanelTitle.textContent = selectedNode.title;
+    articlePanelCount.textContent = `${articles.length} article${articles.length === 1 ? '' : 's'}`;
+    articlePanelList.replaceChildren();
+
+    if (articles.length === 0) {
+      const empty = document.createElement('p');
+      empty.className = 'article-panel__empty';
+      empty.textContent = 'No articles are available for this topic yet.';
+      articlePanelList.appendChild(empty);
+    } else {
+      articles.forEach((article) => {
+        const card = document.createElement('a');
+        card.className = 'article-card';
+        card.href = article.url;
+
+        const title = document.createElement('span');
+        title.className = 'article-card__title';
+        title.textContent = article.title;
+        card.appendChild(title);
+
+        const excerpt = document.createElement('span');
+        excerpt.className = 'article-card__excerpt';
+        excerpt.textContent = article.excerpt;
+        card.appendChild(excerpt);
+        articlePanelList.appendChild(card);
+      });
+    }
+
+    articlePanel.classList.add('is-open');
+    articlePanel.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeArticlePanel() {
+    articlePanel.classList.remove('is-open');
+    articlePanel.setAttribute('aria-hidden', 'true');
+  }
+
+  function resetBranch(id) {
+    collapsed.delete(id);
+    descendantsOf(id).forEach((descendantId) => collapsed.delete(descendantId));
+  }
+
+  function openPathTo(id) {
+    let childId = id;
+    let parentId = parentOf[childId];
+    while (parentId) {
+      collapsed.delete(parentId);
+      (childrenOf[parentId] || []).forEach((siblingId) => {
+        if (siblingId !== childId) collapsed.add(siblingId);
+      });
+      childId = parentId;
+      parentId = parentOf[childId];
+    }
+  }
+
+  function openOneLevel(id) {
+    openPathTo(id);
+    resetBranch(id);
+    (childrenOf[id] || []).forEach((childId) => {
+      if ((childrenOf[childId] || []).length > 0) collapsed.add(childId);
+    });
+  }
+
+  function isAncestorOf(ancestorId, nodeId) {
+    let parentId = parentOf[nodeId];
+    while (parentId) {
+      if (parentId === ancestorId) return true;
+      parentId = parentOf[parentId];
+    }
+    return false;
+  }
+
+  function updateAriaExpanded() {
+    state.forEach((node) => {
+      const el = root.querySelector(`#node-${node.id}`);
+      if (!el) return;
+      const hasChildren = (childrenOf[node.id] || []).length > 0;
+      const isExpanded = hasChildren && (
+        node.id === contextExpandedId ||
+        isAncestorOf(node.id, activeNodeId) ||
+        node.id === activeNodeId && node.id === rootNode?.id
+      );
+      el.setAttribute('aria-expanded', String(isExpanded));
+    });
+  }
 
   function isVisible(id) {
     let cur = parentOf[id];
@@ -167,6 +368,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
       el.style.display = isVisible(n.id) ? '' : 'none';
     });
     updateBadges();
+    updateAriaExpanded();
     renderEdges();
   }
 
@@ -229,7 +431,8 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
       const el = root.querySelector(`#node-${n.id}`);
       if (!el) return;
       el.addEventListener('pointerdown', onNodePointerDown(n, el));
-      el.addEventListener('click', onNodeClick(el));
+      el.addEventListener('click', onNodeClick(n, el));
+      el.addEventListener('keydown', onNodeKeyDown(n, el));
       el.addEventListener('contextmenu', onNodeContextMenu(n));
     });
 
@@ -247,6 +450,9 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     root.querySelector('#zoom-in').addEventListener('click', zoomInHandler);
     root.querySelector('#zoom-out').addEventListener('click', zoomOutHandler);
     root.querySelector('#zoom-reset').addEventListener('click', zoomResetHandler);
+    articlePanel.querySelector('.article-panel__close').addEventListener('click', closeArticlePanel);
+    articlePanel.addEventListener('pointerdown', onPanelPointerDown);
+    window.addEventListener('keydown', onWindowKeyDown);
   }
 
   function detachInteractivity() {
@@ -259,6 +465,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     wrap.removeEventListener('wheel', onWheel);
     window.removeEventListener('pointermove', onWindowPointerMove);
     window.removeEventListener('pointerup', onWindowPointerUp);
+    window.removeEventListener('keydown', onWindowKeyDown);
 
     state.forEach((n) => {
       const el = root.querySelector(`#node-${n.id}`);
@@ -270,6 +477,8 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     root.querySelector('#zoom-in')?.removeEventListener('click', zoomInHandler);
     root.querySelector('#zoom-out')?.removeEventListener('click', zoomOutHandler);
     root.querySelector('#zoom-reset')?.removeEventListener('click', zoomResetHandler);
+    articlePanel.querySelector('.article-panel__close')?.removeEventListener('click', closeArticlePanel);
+    articlePanel.removeEventListener('pointerdown', onPanelPointerDown);
   }
 
   function onPointerOver(e) {
@@ -320,19 +529,44 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
       el.dataset.dragged = '0';
     };
   }
-  function onNodeClick(el) {
-    return () => {
-      if (el.dataset.dragged === '1') { el.dataset.dragged = '0'; return; }
-      window.location.href = el.dataset.url;
+  function onPanelPointerDown(e) {
+    e.stopPropagation();
+  }
+  function selectNode(n, el) {
+    if (el.dataset.dragged === '1') { el.dataset.dragged = '0'; return; }
+    activeNodeId = n.id;
+    contextExpandedId = null;
+    showArticlesFor(n.id);
+    openOneLevel(n.id);
+    updateVisibility();
+  }
+  function onNodeClick(n, el) {
+    return () => selectNode(n, el);
+  }
+  function onNodeKeyDown(n, el) {
+    return (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      selectNode(n, el);
     };
+  }
+  function onWindowKeyDown(e) {
+    if (e.key === 'Escape' && articlePanel.classList.contains('is-open')) closeArticlePanel();
   }
   function onNodeContextMenu(n) {
     return (e) => {
       e.preventDefault();
       const kids = childrenOf[n.id];
       if (!kids || kids.length === 0) return;
-      if (collapsed.has(n.id)) collapsed.delete(n.id);
-      else collapsed.add(n.id);
+      activeNodeId = n.id;
+      openPathTo(n.id);
+      if (collapsed.has(n.id)) {
+        collapsed.delete(n.id);
+        contextExpandedId = n.id;
+      } else {
+        collapsed.add(n.id);
+        contextExpandedId = null;
+      }
       updateVisibility();
     };
   }
@@ -360,7 +594,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     setZoom(scale - 0.15, r.left + r.width / 2, r.top + r.height / 2);
   }
   function zoomResetHandler() {
-    scale = 1; tx = 0; ty = 0; applyTransform();
+    scale = 1; tx = -500; ty = -200; applyTransform();
   }
 
   function syncToViewport(e) {
@@ -386,8 +620,83 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
     --slate: #6d6d7a;
   }
 
+  .left__panel {
+    backdrop-filter: blur(4px);
+  }
+
+  .article-panel {
+    position: absolute;
+    z-index: 20;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    width: min(360px, 90%);
+    height: 100%;
+    padding: 1rem 1rem;
+    background: #c3c5e2ab;
+    overflow: hidden;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 12px 36px #00000066;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(16px);
+    backdrop-filter: blur(4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    
+    /* Hide scrollbar */
+    -webkit-scrollbar {
+      display: none;
+    }
+    /* Hide scrollbar for IE, Edge, and Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  .article-panel.is-open { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .article-panel__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .article-panel__eyebrow {
+    margin: 0 0 6px;
+    color: var(--violet);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .article-panel__title { margin: 0; font-size: 20px; line-height: 1.25; }
+  .article-panel__close {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--card-border);
+    border-radius: 0;
+    color: #5f5c64;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .article-panel__count { margin: 18px 0 10px; color: #5f5c64; font-size: 12px; }
+  .article-panel__list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 2px; }
+  .article-panel :global(.article-card) {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    border: 1px solid var(--card-border);
+    border-radius: 0;
+    color: #5f5c64;
+    background-color: transparent; 
+    text-decoration: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .article-panel :global(.article-card:hover),
+  .article-panel :global(.article-card:focus-visible) { border-color: var(--violet); transform: translateY(-1px); }
+  .article-panel :global(.article-card__title) { color: #5f5c64; font-size: 14px; font-weight: 600; line-height: 1.35; }
+  .article-panel :global(.article-card__excerpt) { color: #5f5c64; font-size: 12px; line-height: 1.45; }
+  .article-panel :global(.article-panel__empty) { margin: 0; padding: 16px; color: var(--text-dim); font-size: 13px; }
+
   /* --- desktop/tablet canvas (default) --- */
-  .desktop-canvas { display: block; width: 100%; height: 100%; position: relative; }
+  .desktop-canvas { display: block; width: 100%; height: 100%; position: relative; align-items: center;}
   .mobile-fallback { display: none; }
 
   #canvas-wrap {
@@ -433,7 +742,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
   .node {
     position: absolute;
     width: 210px;
-    background: var(--card);
+    background: #e9e7e2;
     border: 1px solid var(--card-border);
     border-radius: 10px;
     padding: 14px 16px;
@@ -496,30 +805,30 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
 
   #legend {
     position: absolute;
-    top: 16px; left: 16px;
+    top: 56px; left: 5px;
     z-index: 10;
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     color: var(--text-dim);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    width: auto;
     gap: 6px;
-    background: transparent;
-    padding: 12px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--card-border);
-    backdrop-filter: blur(4px);
+    padding: 1rem; /*compare with .article-panel*/
   }
   #legend .row { display: flex; align-items: center; gap: 8px; }
-  #legend .dot { width: 8px; height: 8px; border-radius: 50%; }
-  #legend .dot.core { background: var(--violet); }
-  #legend .dot.content { background: var(--amber); }
-  #legend .dot.utility { background: var(--slate); }
-  #legend .hint { margin-top: 4px; color: #5f5c64; }
-
+  #legend .hint { margin-bottom: 4px; color: #5f5c64; }
+  .legend__right {
+    width: 80%;
+    margin: 0em 3em;
+  }
+  td {
+    padding: 0.2rem 0rem;
+  }
   #controls {
     position: absolute;
-    bottom: 16px; left: 16px;
+    top: 16px; left: 16px;
     z-index: 10;
     display: flex;
     gap: 8px;
@@ -541,7 +850,7 @@ nodesWithHere.forEach((n) => mobileGroups[n.type]?.push(n));
   #zoom-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    color: var(--text-dim);
+    color: #131318;
     width: 42px;
     text-align: center;
   }
