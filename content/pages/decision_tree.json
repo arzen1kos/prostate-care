@@ -1,0 +1,144 @@
+{
+  "start": "start",
+  "nodes": {
+    "start": {
+      "question": "Which best describes you?",
+      "type": "single_choice",
+      "articles": [],
+      "options": [
+        { "value": "patient", "label": "I have prostate cancer", "next": "p_stage", "articles": [] },
+        { "value": "family", "label": "Someone close to me does", "next": "f_situation", "articles": [] },
+        { "value": "researcher", "label": "I'm researching it", "next": "r_focus", "articles": [] }
+      ]
+    },
+
+    "p_stage": {
+      "question": "What stage are you at?",
+      "type": "single_choice",
+      "articles": ["patient_stages_how_staging_works"],
+      "options": [
+        { "value": "unsure", "label": "Not sure / awaiting diagnosis", "next": "p_unsure", "articles": [] },
+        { "value": "stage0_1", "label": "Stage 0–1 (very early, low risk)", "next": "p_s1", "articles": [] },
+        { "value": "stage2", "label": "Stage 2", "next": "p_s2", "articles": [] },
+        { "value": "stage3", "label": "Stage 3 (locally advanced)", "next": "p_s3", "articles": [] },
+        { "value": "stage4", "label": "Stage 4 (spread beyond prostate)", "next": "p_s4", "articles": [] }
+      ]
+    },
+
+    "p_unsure": {
+      "question": "Have you had a biopsy yet?",
+      "type": "yes_no",
+      "articles": [],
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes",
+          "next": null,
+          "articles": ["patient_diagnosis_reading_biopsy_results", "patient_diagnosis_gleason_and_psa_explained"]
+        },
+        {
+          "value": "no",
+          "label": "No",
+          "next": null,
+          "articles": ["patient_prediagnosis_psa_testing_basics", "patient_prediagnosis_questions_for_your_gp"]
+        }
+      ]
+    },
+
+    "p_s1": {
+      "question": "What do you want to explore?",
+      "type": "multi_choice",
+      "articles": [],
+      "options": [
+        { "value": "surveillance", "label": "Active surveillance", "next": null, "articles": ["patient_stage1_active_surveillance_guide"] },
+        { "value": "treatment", "label": "Surgery or radiation", "next": null, "articles": ["patient_stage1_surgery_vs_radiation"] },
+        { "value": "side_effects", "label": "Side effects & recovery", "next": null, "articles": ["patient_stage1_continence_and_erections"] }
+      ]
+    },
+
+    "p_s2": {
+      "question": "What do you want to explore?",
+      "type": "multi_choice",
+      "articles": [],
+      "options": [
+        { "value": "treatment", "label": "Treatment options", "next": null, "articles": ["patient_stage2_treatment_options_compared"] },
+        { "value": "second_opinion", "label": "Getting a second opinion", "next": null, "articles": ["patient_stage2_second_opinion_checklist"] },
+        { "value": "side_effects", "label": "Side effects & recovery", "next": null, "articles": ["patient_stage2_recovery_timeline"] }
+      ]
+    },
+
+    "p_s3": {
+      "question": "What do you want to explore?",
+      "type": "multi_choice",
+      "articles": [],
+      "options": [
+        { "value": "combined", "label": "Combined radiation + hormone therapy", "next": null, "articles": ["patient_stage3_radiation_with_hormones"] },
+        { "value": "surgery", "label": "Surgery", "next": null, "articles": ["patient_stage3_surgery_when_it_applies"] },
+        { "value": "monitoring", "label": "Follow-up & PSA monitoring", "next": null, "articles": ["patient_stage3_psa_follow_up_schedule"] }
+      ]
+    },
+
+    "p_s4": {
+      "question": "What do you want to explore?",
+      "type": "multi_choice",
+      "articles": ["support_emotional_living_with_advanced_cancer"],
+      "options": [
+        { "value": "systemic", "label": "Hormone & systemic therapy", "next": null, "articles": ["patient_stage4_hormone_therapy_explained", "patient_stage4_chemo_and_newer_drugs"] },
+        { "value": "bone", "label": "Bone health & pain", "next": null, "articles": ["patient_stage4_bone_metastases_care"] },
+        { "value": "trials", "label": "Clinical trials", "next": null, "articles": ["patient_stage4_finding_clinical_trials"] }
+      ]
+    },
+
+    "f_situation": {
+      "question": "Where are they in the journey?",
+      "type": "single_choice",
+      "articles": [],
+      "options": [
+        {
+          "value": "newly_diagnosed",
+          "label": "Just diagnosed",
+          "next": null,
+          "articles": ["family_diagnosis_how_to_start_the_conversation", "family_diagnosis_questions_to_ask_the_doctor"]
+        },
+        {
+          "value": "in_treatment",
+          "label": "In treatment",
+          "next": null,
+          "articles": ["family_treatment_supporting_a_partner", "support_emotional_for_carers"]
+        },
+        { "value": "advanced", "label": "Advanced or palliative", "next": "f_caregiver", "articles": [] }
+      ]
+    },
+
+    "f_caregiver": {
+      "question": "Are you their main caregiver?",
+      "type": "yes_no",
+      "articles": [],
+      "options": [
+        {
+          "value": "yes",
+          "label": "Yes",
+          "next": null,
+          "articles": ["family_advanced_preventing_caregiver_burnout", "support_practical_palliative_care_services"]
+        },
+        {
+          "value": "no",
+          "label": "No",
+          "next": null,
+          "articles": ["family_advanced_staying_connected", "support_emotional_coping_with_grief"]
+        }
+      ]
+    },
+
+    "r_focus": {
+      "question": "Which topics matter to you?",
+      "type": "multi_choice",
+      "articles": [],
+      "options": [
+        { "value": "trials", "label": "Clinical trials", "next": null, "articles": ["researcher_trials_active_and_recruiting", "researcher_trials_enrolling_participants"] },
+        { "value": "biomarkers", "label": "Biomarkers & imaging", "next": null, "articles": ["researcher_biomarkers_psa_and_psma_pet"] },
+        { "value": "epidemiology", "label": "Epidemiology & screening", "next": null, "articles": ["researcher_epidemiology_incidence_and_survival"] }
+      ]
+    }
+  }
+}
