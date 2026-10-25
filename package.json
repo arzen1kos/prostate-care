@@ -9,7 +9,12 @@
     "preview": "astro preview",
     "astro": "astro",
     "close": "rm -rf node_modules && rm -rf package-lock.json",
-    "publish": "git add . && git commit -m 'Update' && git push"
+    "publish": "git add . && git commit -m 'Update' && git push",
+    "rag:ingest": "tsx scripts/ingest.ts",
+    "rag:serve": "tsx scripts/serve.ts",
+    "rag:eval": "tsx scripts/eval.ts",
+    "rag:test": "tsx --test test/*.test.ts",
+    "rag:typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.1",
