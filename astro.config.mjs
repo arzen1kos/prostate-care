@@ -23,5 +23,11 @@ export default defineConfig({
     },
     // adapter: netlify(),
     publicDir: './public',
-    outDir: './dist'
+    outDir: './dist',
+    redirects: {
+        // '/[...slug]': {
+            // status: 302,
+            // destination: '/page-under-development'
+        // }
+    }
 });
