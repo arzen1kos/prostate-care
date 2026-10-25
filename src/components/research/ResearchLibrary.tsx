@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import styles from './ResearchLibrary.module.css';
+import styles from '@styles/research_lib.module.css';
 
 export interface ResearchRecord {
   document_id: string;
