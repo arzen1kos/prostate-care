@@ -7,8 +7,9 @@ import CanvasNav from '@components/CanvasNav.astro';
  
 // Decision tree → nodes & edges. Edges are DIRECTED [parentId, childId].
 // Shape: question → option → (next question | articles). Question-level articles hang off the question.
+// Left-click a node to show its descendant articles and reveal only its direct children.
 // Right-click a question/option to collapse everything beneath it.
-// NOTE: article urls are placeholders (/articles/<id>) — adjust to your real routes.
+// Article node URLs point to generated Astro routes by default and can be overridden per node.
 const nodes = [
   { id: 'start', title: 'Which best describes you?', excerpt: 'Single choice', url: '', x: 4635, y: 120, type: 'question' },
   { id: 'start__patient', title: 'I have prostate cancer', excerpt: 'Answer option', url: '', x: 2359, y: 320, type: 'option' },
@@ -156,18 +157,8 @@ const edges: [string, string][] = [
   ['r_focus__epidemiology', 'researcher_epidemiology_incidence_and_survival'],
 ];
 
-// Optional: give real titles/urls for article codes instead of the
-// auto-humanized fallback (code -> "Patient Stage0" / "What It Means").
-// Anything not listed here still works — it just falls back to
-// `articleBaseUrl + code` as the link and a humanized title.
+// Update article node titles, excerpts, and URLs here to customize cards and destinations.
 //
-// const articleIndex = {
-//   patient_stage0_what_it_means: {
-//     title: 'What does Stage 0 mean?',
-//     url: '/articles/patient/stage-0/what-it-means',
-//   },
-// };
-
 const title: string = "Site Map"
 
 ---

@@ -1,0 +1,41 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { articlePages } from '@lib/article-pages';
+
+export function getStaticPaths() {
+  return articlePages.map((article) => ({
+    params: { slug: article.slug },
+    props: { title: article.title },
+  }));
+}
+
+const { title } = Astro.props;
+---
+
+<Layout title={title} description={`Article page for ${title}.`}>
+  <article class="article-page">
+    <a class="article-page__back" href="/site-map">← Back to site map</a>
+    <h1>{title}</h1>
+    <p>Article content is not available yet.</p>
+  </article>
+</Layout>
+
+<style>
+  .article-page {
+    width: min(100% - 2rem, 48rem);
+    margin: 3rem auto;
+    color: var(--color-navy);
+  }
+
+  .article-page__back {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .article-page h1 {
+    margin: 2rem 0 1rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+    line-height: 1.1;
+  }
+</style>
