@@ -9,23 +9,31 @@
     "preview": "astro preview",
     "astro": "astro",
     "close": "rm -rf node_modules && rm -rf package-lock.json",
-    "publish": "git add . && git commit -m 'Update' && git push"
+    "publish": "git add . && git commit -m 'Update' && git push",
+    "generate-maps": "tsx scripts/generate-maps.ts",
+    "rag:ingest": "tsx scripts/ingest.ts",
+    "rag:serve": "tsx scripts/serve.ts",
+    "rag:eval": "tsx scripts/eval.ts",
+    "rag:test": "tsx --test test/*.test.ts",
+    "rag:typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.1",
-    "@fontsource-variable/inter": "^5.2.6",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "astro": "^7.4.2",
     "astro-icon": "^1.1.5",
-    "framer-motion": "^14.6.0",
     "marked": "^15.0.12",
-    "marked-shiki": "^1.2.0"
+    "marked-shiki": "^1.2.0",
+    "staticmaps": "^1.13.1"
   },
   "devDependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@types/blobshape": "^1.0.3",
     "@types/node": "^24.0.1",
-    "npmlog": "^7.0.1"
+    "@types/staticmaps": "^1.12.5",
+    "npmlog": "^7.0.1",
+    "tsx": "^4.23.15"
   }
 }

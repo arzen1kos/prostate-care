@@ -1,0 +1,10 @@
+{
+  "chatboxContent": {
+    "title": "Prometheus AI",
+    "disclaimer": "General information, not a diagnosis or medical advice. Please do not share names, contact details, or private health information. For personal medical advice, contact your healthcare team.",
+    "initialMessage": "Hi, I’m Prometheus AI 😊\nHere to share trusted info about prostate cancer—ask me anything!",
+    "placeholder": "Type your message...",
+    "buttonText": "Send",
+    "responses": {}
+  }
+}

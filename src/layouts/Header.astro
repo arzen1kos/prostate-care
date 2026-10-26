@@ -1,7 +1,7 @@
 ---
 import Accessibility from '@components/common/Accessibility.astro';
-import ChatBox from '@components/common/ChatBox.astro';
-// import { mainNavItems } from '@contents/common/navigation';
+import ChatBox from '@components/chatbot/ChatBox.tsx';
+// import ChatBox from '@components/common/ChatBox.astro';
 interface Props {
   title: string;
   showBrand?: boolean;
@@ -37,7 +37,7 @@ const brandTitle = title.split('|')[0].trim();
         <img src="/assets/svg/Sitemap-outline.svg" alt=""/>
       </a>
       <div class={`flex flex-col-reverse items-center`}>
-          <ChatBox />
+          <ChatBox client:load/>
         </div>
         <Accessibility />
     </nav>

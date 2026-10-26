@@ -39,7 +39,7 @@ export const footerLinks = {
     { platform: "video", url: "https://www.youtube.com/watch?v=p2OKDvwO6EY", ariaLabel: "Tutorial/Demo in onedrive" },
     { platform: "gmail", url: "mailto:arzenikos@gmail.com", ariaLabel: "Tutorial/Demo in onedrive" },
     { platform: "hashnode", url: "https://hashnode.com/@arsenie", ariaLabel: "Tutorial/Demo in onedrive" },
-    { platform: "github", url: "https://github.com/arsenie-sarmiento", ariaLabel: "Check this on Github" },
+    { platform: "github", url: "https://github.com/arzenikos", ariaLabel: "Check this on Github" },
     { platform: "linkedin", url: "https://nz.linkedin.com/in/arsenie-sarmiento", ariaLabel: "Connect with us on LinkedIn" }
   ],
   copyright: "© 2025 Prometheus — designed & developed by Arsenie S"
