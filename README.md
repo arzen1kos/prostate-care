@@ -1,7 +1,9 @@
 <div align="center">
+
     <img width="100" height="100" alt="prostate-care-logo" src="https://github.com/user-attachments/assets/e06084a5-4925-41f7-b8f3-5368417d4163" />
 
 # Prometheus | Prostate Care
+
 ### Prostate Cancer Support Website Aotearoa
 
 _Knowledge, support, and connection for the Aotearoa prostate cancer community._
@@ -20,20 +22,49 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
 </div>
 
 ## Branch Notes
->
-> **Name:** `dev`
-> 
-> **Purpose:** Primary integration branch for active development. Features, fixes, and refactors are merged here before being promoted to production.
-> 
-> **Workflow**: `feature/* → dev → main`
-> - Keep builds passing.
-> - Merge tested work only.
-> - Sync regularly with `main`.
->
-> **Status:** Integrating RAG chatbot (In Progress)
+
+**Name:** `feature/article-content`
+
+**Purpose:** Establish a centralised content architecture for article-based content, including PDF ingestion, content transformation, metadata management, and Research Hub integration.
+
+**Scope**
+- Create Astro Content Collections for article content
+- Convert PDF resources into structured Markdown/MDX content
+- Standardise article metadata and taxonomy
+- Generate vector-ready JSONL payloads for RAG ingestion
+- Support filtering by year, topic, audience, disease stage, and document type
+- Eliminate hardcoded article content from pages and components
+- Prepare content for future pgvector and Ollama integration
+
+**Workflow:** `feature/article-content → dev → main`
+
+**Deliverables**
+
+- `content/research/*`
+- Research content collection schemas
+- PDF ingestion scripts
+- Metadata extraction pipeline
+- RAG chunk generation pipeline
+- Research Hub content source
+- Taxonomy and filtering support
+
+**Guidelines**
+- Use Astro Content Collections as the source of truth
+- Store website content as Markdown or MDX
+- Generate RAG assets from content, not vice versa
+- Keep content and presentation layers separate
+- Preserve source PDF references and attribution
+
+**Dependencies**
+- Existing PDF library under `public/assets/pdf`
+- Docker services (Ollama, nomic-embed-text, PostgreSQL, pgvector)
+
+**Status:** In Progress - Building article ingestion, content collections, and Research Hub data architecture.
 
 ## Launching the app locally
+
 ### Requirements:
+
 - **Operating System:**
   - (a) Windows 10 or Windows 11 environment  
     &nbsp;&nbsp;&nbsp;&nbsp;- WSL2 installed to launch Linux Ubuntu environment  
@@ -46,18 +77,18 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
   - Docker (to install Ollama and PostgreSQL containers)
 
 ### Main Steps
+
 1. Cloning the repository:
+
 ```bash
 git clone https://github.com/arzen1kos/prostate-care.git
-
-# To automatically initialize and fetch all submodules, use this instead
-git clone --recurse-submodules https://github.com/arzen1kos/prostate-care.git 
-
 cd prostate-care
 ```
 
 2. Installing the package for dependencies
+
 In the parent directory, run the following commands:
+
 ```bash
 rm -rf node_modules
 rm -rf package-lock.json
@@ -65,31 +96,15 @@ npm install
 ```
 
 3. Launching the app
+
 In the parent directory, run the following commands:
+
 #### Module dependency resolution
+
 ```bash
 npm run dev
 ```
 
-### Adding Submodules
-```bash
-git submodule add https://github.com/arzen1kos/prostate-care-assets.git public/assets
-
-# manually update the submodules 
-git submodule update --init --recursive
-```
-
-## Cleanup
-```bash
-# 1. Unregister from .git/config and clear the working directory
-git submodule deinit -f public/assets
-
-# 2. Remove the cached repo data (this is the one people forget)
-rm -rf .git/modules/public/assets
-
-# 3. Remove from the index and .gitmodules, then commit
-git rm -f public/assets
-```
-
 ----
 
+Created by Arsenie — 2025
