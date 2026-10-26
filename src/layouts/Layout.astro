@@ -21,9 +21,7 @@ const { title, description = 'BlueprintNZ - Modern web solutions' } = Astro.prop
     <meta name="description" content={description} />
     <title>{title} | Prostate Cancer Foundation NZ</title>
     
-    <!-- Theme script to prevent flash of wrong theme -->
     <script is:inline>
-      // Check for saved theme preference or use system preference
       const getThemePreference = () => {
         if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
           return localStorage.getItem('theme');
@@ -31,7 +29,6 @@ const { title, description = 'BlueprintNZ - Modern web solutions' } = Astro.prop
         return window.matchMedia('(prefers-color-scheme: light)').matches ? 'dark' : 'light';
       };
       
-      // Apply theme immediately to prevent flash
       const theme = getThemePreference();
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
@@ -41,16 +38,13 @@ const { title, description = 'BlueprintNZ - Modern web solutions' } = Astro.prop
     </script>
   </head>
   <body class="min-h-screen flex flex-col">
-    <!-- <Header label="Home" href="/" icon="home" /> -->
     <Header title={title} showBrand={!title.startsWith("Welcome")} />
-
-    <!-- <Breadcrumbs items={breadcrumbItems} /> -->
 
     <main class="grow">
       <slot />
     </main>
     <Footer />
-    <!-- <BackToTop /> -->
+
     <button
       id="scrollToTop"
       class="fixed bottom-6 right-6 z-50 bg(--color-palette-four) text(--color-palette-one) px-4 py-3 rounded-sm shadow-lg hover:bg(--color-palette-four) transition-opacity duration-300 opacity-0 pointer-events-none"

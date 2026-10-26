@@ -15,7 +15,7 @@ const content = page.data;
     description="Find information for navigating prostate cancer diagnosis, treatment, and well-being."
 >
   <HubLanding content={content}>
-    <div class="hub__content">
+    <div class="content">
       <h2>I am looking for information on...</h2>
       <div class="patient-path__stages">
       {stages.map((stage, index) => (
@@ -36,89 +36,16 @@ const content = page.data;
       </div>
     </div>
   </HubLanding>
-
-    <!-- <section class="patient-path hub">
-    <div class="patient-path__hero hub__hero">
-        <div>
-        <nav aria-label="Breadcrumb">
-            <a href="/welcome">Home</a><span aria-hidden="true">›</span><span>Finding your way</span>
-        </nav>
-        <h1>Every journey is different.<br />Let’s find the information you need.</h1>
-        <p>
-            Choose the clinical stage or topic that best reflects where you or someone you love is today.
-            We’ll show you related information to explore with your healthcare team.
-        </p>
-        <img src="/assets/thumbnails/hero-patient-path.png" alt="" />
-        </div>
-    </div>
-    <div class="patient-path__body">
-        <h2>I am looking for information on...</h2>
-        <div class="patient-path__stages">
-        {stages.map((stage, index) => (
-            <details open={index === 0}>
-            <summary>{stage.label}<span aria-hidden="true">⌄</span></summary>
-            <ul class="patient-path__topics">
-                {stage.topics.map((topic) => (
-                <li>
-                    <a href={topic.href}>
-                    <img src="/public/assets/placeholders/placeholder-cards.png" alt="" loading="lazy" />
-                    <span>{topic.title}</span>
-                    </a>
-                </li>
-                ))}
-            </ul>
-            </details>
-        ))}
-        </div>
-    </div>
-    </section> -->
 </Layout>
 
 <style>
-  /* .patient-path__hero > div {
-    position: relative;
-    padding-right: min(22vw, 16rem);
-  } */
-
-  /* .patient-path__hero nav {
-    display: flex;
-    gap: 0.45rem;
-    color: var(--color-indigo);
-    font-size: 0.8rem;
-  } */
-
-  .patient-path__hero h1 {
-    /* margin: 0.5rem 0 0;
-    font-size: clamp(1.8rem, 3.5vw, 2.65rem);
-    font-weight: 800;
-    line-height: 1.08; */
-  }
-
-  .patient-path__hero p {
-    /* max-width: 45rem;
-    margin: 0.7rem 0 0;
-    color: var(--color-ink-muted);
-    font-size: 0.9rem;
-    line-height: 1.55; */
-  }
-
-  .patient-path__hero > div > img {
-    /* position: absolute;
-    top: 1rem;
-    right: 0;
-    width: min(20vw, 13rem);
-    height: 12rem;
-    object-fit: contain; */
-  }
-
-  .hub__content {
-  /* .patient-path__body { */
+  .content {
     width: min(100% - 3rem, 74rem);
     margin-inline: auto;
     padding-bottom: 3.5rem;
   }
 
-  .hub__content h2 {
+  .content h2 {
     margin: 0 0 1rem;
     font-size: 1.25rem;
   }
