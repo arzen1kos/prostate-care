@@ -32,8 +32,37 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
 >
 > **Status:** Integrating RAG chatbot (In Progress)
 
+## UI Snapshots
+
+<table>
+  <tr align="center">
+    <td width="300">
+      <img width="485" height="360" title="Splashscreen" alt="splashscreen" src="https://github.com/user-attachments/assets/7973378e-9982-451d-8676-03c1ab08a62e" />
+    </td>
+    <td width="300">
+      <img width="515" height="360" title="Homepage" alt="landing-page-after-delay" src="https://github.com/user-attachments/assets/68df6ee0-f5eb-4c58-8b6c-2cf907faa938" />
+    </td>
+    <td width="300">
+      <img width="420" height="300" title="Family Support Page" alt="family-path" src="https://github.com/user-attachments/assets/2c76c513-c9d0-466c-a995-39995d7f7e32" />
+    </td>
+  </tr>
+  <tr align="center">
+    <td>
+      <img width="485" height="360" title="Research Hub Page" alt="research-path" src="https://github.com/user-attachments/assets/1a3d7860-4999-48aa-9c2b-13791fa2df3a" />
+    </td>
+    <td>
+      <img width="515" height="360" title="Patient Space Page" alt="patient-path" src="https://github.com/user-attachments/assets/33f985e9-afe6-4760-a183-bacf77bfe566" />
+    </td>
+    <td>
+      <img width="420" height="300" title="ai" alt="ai-chatbot-response" src="https://github.com/user-attachments/assets/71452d4f-da41-4f62-a000-98370b22b319" />
+    </td>
+  </tr>
+</table>
+
 ## Launching the app locally
+
 ### Requirements:
+
 - **Operating System:**
   - (a) Windows 10 or Windows 11 environment  
     &nbsp;&nbsp;&nbsp;&nbsp;- WSL2 installed to launch Linux Ubuntu environment  
@@ -46,7 +75,9 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
   - Docker (to install Ollama and PostgreSQL containers)
 
 ### Main Steps
+
 1. Cloning the repository:
+
 ```bash
 git clone https://github.com/arzen1kos/prostate-care.git
 
@@ -57,7 +88,9 @@ cd prostate-care
 ```
 
 2. Installing the package for dependencies
+
 In the parent directory, run the following commands:
+
 ```bash
 rm -rf node_modules
 rm -rf package-lock.json
@@ -65,31 +98,15 @@ npm install
 ```
 
 3. Launching the app
+
 In the parent directory, run the following commands:
+
 #### Module dependency resolution
+
 ```bash
 npm run dev
 ```
 
-### Adding Submodules
-```bash
-git submodule add https://github.com/arzen1kos/prostate-care-assets.git public/assets
-
-# manually update the submodules 
-git submodule update --init --recursive
-```
-
-## Cleanup
-```bash
-# 1. Unregister from .git/config and clear the working directory
-git submodule deinit -f public/assets
-
-# 2. Remove the cached repo data (this is the one people forget)
-rm -rf .git/modules/public/assets
-
-# 3. Remove from the index and .gitmodules, then commit
-git rm -f public/assets
-```
-
 ----
 
+Created by Arsenie — 2025
