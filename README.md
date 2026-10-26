@@ -61,6 +61,34 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
 
 **Status:** In Progress - Building article ingestion, content collections, and Research Hub data architecture.
 
+## UI Snapshots
+
+
+<table>
+  <tr align="center">
+    <td width="300">
+      <img width="485" height="360" title="Splashscreen" alt="splashscreen" src="https://github.com/user-attachments/assets/7973378e-9982-451d-8676-03c1ab08a62e" />
+    </td>
+    <td width="300">
+      <img width="515" height="360" title="Homepage" alt="landing-page-after-delay" src="https://github.com/user-attachments/assets/68df6ee0-f5eb-4c58-8b6c-2cf907faa938" />
+    </td>
+    <td width="300">
+      <img width="420" height="300" title="Family Support Page" alt="family-path" src="https://github.com/user-attachments/assets/2c76c513-c9d0-466c-a995-39995d7f7e32" />
+    </td>
+  </tr>
+  <tr align="center">
+    <td>
+      <img width="485" height="360" title="Research Hub Page" alt="research-path" src="https://github.com/user-attachments/assets/1a3d7860-4999-48aa-9c2b-13791fa2df3a" />
+    </td>
+    <td>
+      <img width="515" height="360" title="Patient Space Page" alt="patient-path" src="https://github.com/user-attachments/assets/33f985e9-afe6-4760-a183-bacf77bfe566" />
+    </td>
+    <td>
+      <img width="420" height="300" title="ai" alt="ai-chatbot-response" src="https://github.com/user-attachments/assets/71452d4f-da41-4f62-a000-98370b22b319" />
+    </td>
+  </tr>
+</table>
+
 ## Launching the app locally
 
 ### Requirements:
