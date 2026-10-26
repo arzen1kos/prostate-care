@@ -34,7 +34,7 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
 
 ## UI Snapshots
 
-<table>
+<table align="center">
   <tr align="center">
     <td width="300">
       <img width="485" height="360" title="Splashscreen" alt="splashscreen" src="https://github.com/user-attachments/assets/7973378e-9982-451d-8676-03c1ab08a62e" />
