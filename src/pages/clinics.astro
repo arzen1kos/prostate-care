@@ -1,5 +1,7 @@
 ---
+
 import Layout from '@layouts/Layout.astro';
+import HubLanding from "@layouts/HubLanding.astro";
 import ClinicCard from '@components/features/clinic/ClinicCard.astro'
 import { clinic, community} from "@contents/clinics/clinics.json";
 
@@ -8,102 +10,111 @@ const communities = community
 
 const title: string = "Clinics and Support Groups"
 const description: string = "Find prostate cancer clinics and community support groups in Aotearoa New Zealand."
+
+const content = {
+  title: "Support",
+  heading: "Support and Care",
+  description: "Find local clinics, support groups, and community resources.",
+  breadcrumbs: [
+    { label: "Home", href: "/welcome", current: false },
+    { label: "Support", href: "/support", current: true },
+  ],
+  illustration: "/assets/thumbnails/clinic-thumbnail.png",
+  sections: [],
+};
+
 ---
 
 <Layout
   title=`${title}`
   description={description}
 >
-  <div class="container mx-auto px-5 pt-10 pb-20 md:px-8">
-    <div>
-      <h1 class="text-6xl font-bold mb-2">{title}</h1>
-        {description}
+  <HubLanding content={content}>
+    <div class="container pt-5 px-6 pb-20">
       <hr class="my-4 border-t border-(--color-palette-gray)" />
-    </div>   
+      <section aria-labelledby="clinic-list-heading" class="mt-10">
+        <h1 class="heading text-2xl font-bold text-secondary">
+          Clinics
+        </h1>
+        <div class="mt-6 grid gap-6 md:grid-cols-3">
+          {clinics.map((clinic: any) => (
+          <ClinicCard
+            name={clinic.name}
+            description={clinic.description}
+            thumbnail={clinic.thumbnail}
+            address={clinic.address}
+            phone={clinic.phone}
+            link={clinic.link}
+          />   
+        ))}
+        </div>
+      </section>   
 
-
-    <section aria-labelledby="clinic-list-heading" class="mt-10">
-      <h2 class="heading text-2xl font-bold text-secondary">
-        Clinics
-      </h2>
-      <div class="mt-6 grid gap-6 md:grid-cols-3">
-        {clinics.map((clinic: any) => (
-        <ClinicCard
-          name={clinic.name}
-          description={clinic.description}
-          thumbnail={clinic.thumbnail}
-          address={clinic.address}
-          phone={clinic.phone}
-          link={clinic.link}
-        />   
-      ))}
-      </div>
-    </section>   
-
-    <section aria-labelledby="support-groups-heading" class="mt-14">
-      <h2 class="heading text-2xl font-bold text-secondary">
-        Support Groups
-      </h2>
-      <div class="mt-6 grid gap-6 md:grid-cols-1">
-        {
-          communities.map((group: any) => (
-            <article class="flex flex-col rounded-xl border border-neutral-200 p-6 shadow-sm">
-              <p class="text-sm font-semibold uppercase tracking-wide">
-                {group.region}
-              </p>
-              <h3 class="mt-2 text-xl font-bold text-neutral-800">
-                {group.name}
-              </h3>
-              <p class="mt-3 flex-1 leading-relaxed text-neutral-700">
-                {group.description}
-              </p>
-              {group.location && (
-                <p class="mt-3 text-sm">
-                  <strong>Location:</strong> {group.location}
+      <section aria-labelledby="support-groups-heading" class="mt-14">
+        <h2 class="heading text-2xl font-bold text-secondary">
+          Support Groups
+        </h2>
+        <div class="mt-6 grid gap-6 md:grid-cols-1">
+          {
+            communities.map((group: any) => (
+              <article class="flex flex-col rounded-xl border border-neutral-200 p-6 shadow-sm">
+                <p class="text-sm font-semibold uppercase tracking-wide">
+                  {group.region}
                 </p>
-              )}
-              {group.recurrence && (
-                <p class="mt-2 text-sm">
-                  <strong>Schedule:</strong> {group.recurrence}
+                <h3 class="mt-2 text-xl font-bold text-neutral-800">
+                  {group.name}
+                </h3>
+                <p class="mt-3 flex-1 leading-relaxed text-neutral-700">
+                  {group.description}
                 </p>
-              )}
-              {group.link && (
-                <a
-                  class="mt-4 w-fit text-blue-700 underline underline-offset-2 hover:text-blue-900"
-                  href={group.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Find out more{" "}
-                  <span class="sr-only">
-                    about {group.name} (opens in a new tab)
-                  </span>
-                </a>
-              )}
-            </article>
-          ))
-        }
-      </div>
-    </section>
+                {group.location && (
+                  <p class="mt-3 text-sm">
+                    <strong>Location:</strong> {group.location}
+                  </p>
+                )}
+                {group.recurrence && (
+                  <p class="mt-2 text-sm">
+                    <strong>Schedule:</strong> {group.recurrence}
+                  </p>
+                )}
+                {group.link && (
+                  <a
+                    class="mt-4 w-fit text-blue-700 underline underline-offset-2 hover:text-blue-900"
+                    href={group.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Find out more{" "}
+                    <span class="sr-only">
+                      about {group.name} (opens in a new tab)
+                    </span>
+                  </a>
+                )}
+              </article>
+            ))
+          }
+        </div>
+      </section>
 
-    <aside
-      class="mt-12 rounded-lg bg(--color-palette-one)] p-6 text(--color-palette-five)"
-    >
-      <h2 class="text-xl font-bold">Looking for more support near you?</h2>
-      <p class="mt-2">
-        The Cancer Society of New Zealand connects people and whānau affected by
-        cancer with local information and community support.
-      </p>
-      <a
-        class="mt-4 inline-block underline underline-offset-2"
-        href="https://www.cancer.org.nz/"
-        target="_blank"
-        rel="noopener noreferrer"
+      <aside
+        class="mt-12 rounded-lg bg(--color-palette-one)] p-6 text(--color-palette-five)"
       >
-        Explore Cancer Society support options <span class="sr-only"
-          >(opens in a new tab)</span
+        <h2 class="text-xl font-bold">Looking for more support near you?</h2>
+        <p class="mt-2">
+          The Cancer Society of New Zealand connects people and whānau affected by
+          cancer with local information and community support.
+        </p>
+        <a
+          class="mt-4 inline-block underline underline-offset-2"
+          href="https://www.cancer.org.nz/"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-      </a>
-    </aside>
-  </div>
+          Explore Cancer Society support options <span class="sr-only"
+            >(opens in a new tab)</span
+          >
+        </a>
+      </aside>
+    </div>
+  </HubLanding>
 </Layout>
