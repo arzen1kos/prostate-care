@@ -16,7 +16,7 @@ _Knowledge, support, and connection for the Aotearoa prostate cancer community._
 
 `~⟢~`
 
-[![Website](https://img.shields.io/badge/Live_Demo-View%20on%20Netlify-00007e?style=for-the-badge&logo=netlify)](prostatecarenz.netlify.app/)
+[![Website](https://img.shields.io/badge/Live_Demo-View%20on%20Netlify-00007e?style=for-the-badge&logo=netlify)](https://prostatecarenz.netlify.app/)
 </div>
 
 ## Branch Notes
